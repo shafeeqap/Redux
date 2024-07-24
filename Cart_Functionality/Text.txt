@@ -1,0 +1,8 @@
+npm create vite@latest
+
+npm install
+----------- 
+1. @reduxjs/toolkit 
+2. react-redux 
+3. axios 
+4. react-router-dom
