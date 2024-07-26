@@ -1,0 +1,40 @@
+CRUD Application using MERN Stack with Redux Toolkit 
+----------------------------------------------------
+
+
+Front-End App
+------------
+
+1. npm init vite@latest
+2. axios
+3. react-router-dom 
+4. tailwindcss 
+5. react-redux
+6. @reduxjs/toolkit
+7. react-icons
+8. Formik and Yup (Form Validation)
+
+
+Server side App
+---------------
+
+1. npm init -y 
+2. npm install express 
+3. mongoose
+4. cors 
+5. nodemon 
+6. dotenv
+
+
+Formik
+------
+Formik is a library that helps with handling forms in React. 
+It provides a set of tools to manage form state, handle form submissions, and manage validation.
+Formik aims to reduce the amount of boilerplate code required for building forms, 
+making it easier to manage complex form logic.
+
+Yup
+---
+Yup is a JavaScript schema builder for value parsing and validation. 
+It is often used with Formik to handle form validation. 
+Yup allows you to define a schema for your form fields and validate the form values against this schema.
