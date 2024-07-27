@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import bg_image from "../../assets/login_bg.jpg";
 import { PiEyeThin, PiEyeSlashThin } from "react-icons/pi";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
-import { loginValidation } from "../../validation/loginValidation";
+import { loginValidation } from "../../validation/loginValidation.js";
+import { useLoginMutation } from "../../features/users/usersApiSlice";
 
 const initialValue = {
   email: "",
@@ -11,9 +12,9 @@ const initialValue = {
 };
 
 const Login = () => {
-  // const [email, setEmail] = useState("");
-  // const [password, setPassword] = useState("");
+  const [userLogin, {isLoading, error}] = useLoginMutation();
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate()
 
   const { values, handleBlur, handleChange, handleSubmit, touched, errors } =
     useFormik({
@@ -21,12 +22,19 @@ const Login = () => {
       validationSchema: loginValidation,
       onSubmit: (values) => {
         console.log(values);
+        userLogin(values).unwrap()
+        .then((response) =>{
+          window.alert(response.message)
+          if(response.message === "success"){
+            navigate("/")
+          }
+        }).catch((error) =>{
+          console.log(error);
+        })
       },
     });
 
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  // };
+
 
   return (
     <div className="flex justify-center items-center h-screen bg-gray-300">

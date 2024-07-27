@@ -12,7 +12,7 @@ Front-End App
 5. react-redux
 6. @reduxjs/toolkit
 7. react-icons
-8. Formik and Yup (Form Validation)
+8. Formik and Yup (Form handling and Validation)
 
 
 Server side App
@@ -24,6 +24,8 @@ Server side App
 4. cors 
 5. nodemon 
 6. dotenv
+7. bcrypt
+8. jwt
 
 
 Formik

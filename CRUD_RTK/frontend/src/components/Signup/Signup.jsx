@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { PiEyeThin, PiEyeSlashThin } from "react-icons/pi";
 import { useFormik } from "formik";
-import { signupValidation } from "../../validation/signupValidation";
+import { signupValidation } from "../../validation/signupValidation.js";
+import { useRegisterMutation } from "../../features/users/usersApiSlice.js";
 
 const initialValue = {
   userName: "",
@@ -13,6 +14,8 @@ const initialValue = {
 
 const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [addUser, { isLoading, error }] = useRegisterMutation();
+  const navigate = useNavigate();
 
   const { values, handleBlur, handleChange, handleSubmit, touched, errors } =
     useFormik({
@@ -20,6 +23,17 @@ const Signup = () => {
       validationSchema: signupValidation,
       onSubmit: (values) => {
         console.log(values);
+        addUser(values)
+          .unwrap()
+          .then((response) => {
+            window.alert(response.message);
+            if (response.message === "success") {
+              navigate("/login");
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
       },
     });
 
@@ -95,9 +109,16 @@ const Signup = () => {
               )}
             </div>
             <div className="py-5 text-center">
-              <button type="submit" className="bg-blue-500 w-full p-1 rounded-full text-white hover:bg-blue-400">
-                Login
+              <button
+                type="submit"
+                className="bg-blue-500 w-full p-1 rounded-full text-white hover:bg-blue-400"
+                disabled={isLoading}
+              >
+                {isLoading ? "Signing up..." : "Sign up"}
               </button>
+              {error && (
+                <p className="text-red-500 mt-2">{error.data.message}</p>
+              )}
               <p className="text-sm text-gray-400">
                 You have already account?{" "}
                 <span className="text-blue-500">
