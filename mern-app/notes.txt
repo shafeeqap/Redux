@@ -1,0 +1,39 @@
+Backend
+----------
+1. init -y
+2. express 
+3. dotenv 
+4. mongoose
+5. jwt
+6. bcryptjs 
+7. nodemon
+8. cookie-parser 
+9. async-handler 
+
+Async Handler allows you to write asynchronous route handlers 
+without having to manually wrap them in try-catch blocks 
+to catch and pass errors to the Express error-handling middleware.
+
+
+Frontend
+--------
+1. vite@latest 
+2. @reduxjs/toolkit
+3. react-redux
+4. react-router-dom 
+5. react-icons 
+6. Formik 
+7. Yup 
+8. react-toastify
+
+
+========================== root directory package.json ====================================
+  "scripts": {
+    "start": "node backend/server.js",
+    "server": "nodemon backend/server.js",
+    "client": "npm run dev --prefix frontend",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
+  },
+
+npm install -D concurrently :- for start both frontend and Backend
+npm start dev

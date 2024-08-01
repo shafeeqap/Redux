@@ -1,9 +1,13 @@
-import React from 'react'
+import React from "react";
+import Navbar from "../components/Navbar/Navbar";
 
 const HomePage = () => {
   return (
-    <div className='font-bold text-2xl'>Welcome to Home Page</div>
-  )
-}
+    <>
+      <Navbar />
+      <div className="font-bold text-2xl">Welcome to Home Page</div>
+    </>
+  );
+};
 
-export default HomePage
+export default HomePage;

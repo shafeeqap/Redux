@@ -1,16 +1,22 @@
-import React from 'react';
-import { Provider } from 'react-redux';
-import { store } from './app/stor.js';
-import ProfilePage from './Components/ProfileForm.jsx';
+import React from "react";
+import Login from "./Components/Login/Login";
+import Signup from "./Components/Signup/Signup";
+import { Routes, Route } from "react-router-dom";
+import HomePage from "./pages/HomePage";
+import { ToastContainer} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const App = () => {
-    const userId = 'YOUR_USER_ID_HERE'; // Replace with the actual user ID
-
-    return (
-        <Provider store={store}>
-            <ProfilePage userId={userId} />
-        </Provider>
-    );
+  return (
+    <>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+      </Routes>
+    </>
+  );
 };
 
 export default App;

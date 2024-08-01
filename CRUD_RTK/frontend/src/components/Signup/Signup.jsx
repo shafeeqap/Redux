@@ -14,7 +14,7 @@ const initialValue = {
 
 const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const [addUser, { isLoading, error }] = useRegisterMutation();
+  const [registerUser, { isLoading, error }] = useRegisterMutation();
   const navigate = useNavigate();
 
   const { values, handleBlur, handleChange, handleSubmit, touched, errors } =
@@ -23,7 +23,7 @@ const Signup = () => {
       validationSchema: signupValidation,
       onSubmit: (values) => {
         console.log(values);
-        addUser(values)
+        registerUser(values)
           .unwrap()
           .then((response) => {
             window.alert(response.message);
@@ -41,7 +41,7 @@ const Signup = () => {
     <div className="flex justify-center items-center bg-gray-300 h-screen">
       <div className="bg-white p-5 w-1/4">
         <div className="text-center py-5">
-          <h1 className="text-blue-500 font-semibold text-2xl">Sign in</h1>
+          <h1 className="text-blue-500 font-semibold text-2xl">Sign Up</h1>
         </div>
         <div>
           <form onSubmit={handleSubmit}>
@@ -121,7 +121,7 @@ const Signup = () => {
               )}
               <p className="text-sm text-gray-400">
                 You have already account?{" "}
-                <span className="text-blue-500">
+                <span className="text-blue-500 hover:underline">
                   <Link to="/login">Login</Link>{" "}
                 </span>
               </p>

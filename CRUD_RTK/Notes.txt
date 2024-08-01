@@ -13,6 +13,7 @@ Front-End App
 6. @reduxjs/toolkit
 7. react-icons
 8. Formik and Yup (Form handling and Validation)
+9. react-icons
 
 
 Server side App

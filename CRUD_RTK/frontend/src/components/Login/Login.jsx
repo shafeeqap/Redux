@@ -12,9 +12,9 @@ const initialValue = {
 };
 
 const Login = () => {
-  const [userLogin, {isLoading, error}] = useLoginMutation();
+  const [userLogin, { isLoading, error }] = useLoginMutation();
   const [showPassword, setShowPassword] = useState(false);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const { values, handleBlur, handleChange, handleSubmit, touched, errors } =
     useFormik({
@@ -22,19 +22,19 @@ const Login = () => {
       validationSchema: loginValidation,
       onSubmit: (values) => {
         console.log(values);
-        userLogin(values).unwrap()
-        .then((response) =>{
-          window.alert(response.message)
-          if(response.message === "success"){
-            navigate("/")
-          }
-        }).catch((error) =>{
-          console.log(error);
-        })
+        userLogin(values)
+          .unwrap()
+          .then((response) => {
+            window.alert(response.message);
+            if (response.message === "success") {
+              navigate("/");
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
       },
     });
-
-
 
   return (
     <div className="flex justify-center items-center h-screen bg-gray-300">
@@ -66,7 +66,9 @@ const Login = () => {
                   placeholder="Email"
                   className="p-1 px-5 w-full rounded-full bg-gray-200"
                 />
-                {errors.email && touched.email && (<small className="text-red-500">{errors.email}</small>)}
+                {errors.email && touched.email && (
+                  <small className="text-red-500">{errors.email}</small>
+                )}
               </div>
               <div className="py-5 relative">
                 <input
@@ -85,7 +87,12 @@ const Login = () => {
                 >
                   {showPassword ? <PiEyeSlashThin /> : <PiEyeThin />}
                 </button>
-                {errors.password && touched.password && (<small className="text-red-500">{errors.password}</small>)}
+                {errors.password && touched.password && (
+                  <small className="text-red-500">{errors.password}</small>
+                )}
+                <div>
+                  <Link><small className="text-blue-500">Forgot password?</small></Link>
+                </div>
               </div>
               <div className="py-5 text-center">
                 <button
@@ -96,8 +103,8 @@ const Login = () => {
                 </button>
                 <p className="text-sm text-gray-400">
                   Don't have an account?{" "}
-                  <span className="text-blue-500">
-                    <Link to="/signup">Sign in</Link>{" "}
+                  <span className="text-blue-500 hover:underline">
+                    <Link to="/signup">Sign Up</Link>{" "}
                   </span>
                 </p>
               </div>

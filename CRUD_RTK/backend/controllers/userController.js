@@ -44,12 +44,12 @@ const handleLogin = async (req, res) =>{
       if(matched){
         const token = jwt.sign({email:user.email}, "jwt-secret-key", {expiresIn:"1d"});
         res.cookie("token", token, { httpOnly: true, sameSite: 'strict' });
-        return res.status(200).json({message: "success"})
+        return res.status(200).json({message: "success", user})
       }else{
-        return res.json({ message: "Password not match" });
+        return res.status(401).json({ message: "Password does not match" });
       }
     }else{
-      return res.json({ message: "User not exist" });
+      return res.status(404).json({ message: "User does not exist" });
     }
   } catch (error) {
     res.status(500).json({message})
