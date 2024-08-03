@@ -13,7 +13,7 @@ const authUser = asyncHandler(async (req, res) => {
     generateToken(res, user._id);
     res.status(201).json({
       _id: user._id,
-      userName: user.userName,
+      firstName: user.firstName,
       email: user.email,
     });
   } else {
@@ -26,8 +26,7 @@ const authUser = asyncHandler(async (req, res) => {
 // route     POST /api/users/
 // @access   Public
 const registerUser = asyncHandler(async (req, res) => {
-  const { userName, email, password } = req.body;
-
+  const { firstName, lastName, email, password } = req.body;
   const existingUser = await User.findOne({ email });
 
   if (existingUser) {
@@ -35,15 +34,17 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new Error("User already exist");
   }
   const user = await User.create({
-    userName,
+    firstName,
+    lastName,
     email,
     password,
   });
   if (user) {
     generateToken(res, user._id);
-    res.status(201).json({
+    return res.status(201).json({
       _id: user._id,
-      userName: user.userName,
+      firstName: user.firstName,
+      lastName: user.lastName,
       email: user.email,
     });
   } else {
@@ -69,8 +70,10 @@ const logoutUser = asyncHandler(async (req, res) => {
 const getUserProfile = asyncHandler(async (req, res) => {
   const user = {
     _id: req.user._id,
-    userName: req.user.userName,
+    firstName: req.user.firstName,
+    lastName: req.user.lastName,
     email: req.user.email,
+    phone: req.user.phone,
   };
   res.status(200).json({ message: "User profile", user });
 });
@@ -82,17 +85,21 @@ const updateUserProfile = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user._id);
 
   if (user) {
-    user.userName = req.body.userName || user.userName;
+    user.firstName = req.body.firstName || user.firstName;
+    user.lastName = req.body.lastName || uer.lastName;
     user.email = req.body.email || user.email;
+    user.phone = req.body.phone || user.phone;
 
     if (req.body.password) {
       user.password = req.body.password;
     }
-    const updateduser = await user.save();
+    const updatedUser = await user.save();
     res.status(200).json({
-      _id: updateduser._id,
-      userName: updateduser.userName,
-      email: updateduser.email,
+      _id: updatedUser._id,
+      firstName: updatedUser.firstName,
+      lastName: updatedUser.lastName,
+      email: updatedUser.email,
+      phone: updatedUser.phone,
     });
   } else {
     res.status(404);

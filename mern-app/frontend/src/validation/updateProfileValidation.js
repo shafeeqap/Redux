@@ -1,6 +1,6 @@
 import * as Yup from "yup";
 
-export const signupValidation = Yup.object({
+export const updateProfileValidation = Yup.object({
   firstName: Yup.string()
     .min(3)
     .matches(/^[^\s]+(\s[^\s]+)*$/, "Name cannot have adjacent spaces")

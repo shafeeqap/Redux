@@ -1,16 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { PiEyeThin, PiEyeSlashThin } from "react-icons/pi";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
-import { signupValidation } from "../../validation/yupSignupValidation";
+import { signupValidation } from "../../../validation/yupSignupValidation";
 import { IoLockClosedOutline } from "react-icons/io5";
 import { TfiEmail } from "react-icons/tfi";
 import { FiUser } from "react-icons/fi";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useRegisterMutation } from "../../../features/user/usersApiSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { setCredentials } from "../../../features/user/authSlice";
+import Loader from "../../../Components/Loader/Loader";
 
 const initialValues = {
-  userName: "",
+  firstName: "",
+  lastName: "",
   email: "",
   password: "",
   cPassword: "",
@@ -18,10 +23,37 @@ const initialValues = {
 
 const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const { values, handleChange, handleSubmit, handleBlur, errors, touched } =
-    useFormik({
+  const [register, { isLoading }] = useRegisterMutation();
+  const { userInfo } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (userInfo) {
+      navigate("/login");
+    }
+  }, [navigate, userInfo]);
+
+  const { values, handleChange, handleSubmit, handleBlur, errors, touched } = useFormik({
       initialValues: initialValues,
       validationSchema: signupValidation,
+      onSubmit: async (values) => {
+        try {
+          const res = await toast.promise(register(values).unwrap(), {
+            pending: "Registering...",
+            success: "Registration successful!",
+            error: "Registeration failed!",
+          });
+          console.log(res);
+          // update the Redux store with the new user credentials.
+          dispatch(setCredentials({ ...res })); 
+          navigate("/login");
+        } catch (error) {
+          toast.error(
+            error?.data?.message || "An error occurred during register."
+          );
+        }
+      },
     });
 
   return (
@@ -32,24 +64,41 @@ const Signup = () => {
         </div>
         <div className="p-5">
           <form onSubmit={handleSubmit}>
-            <div className="mb-5 relative">
+            <div className="mb-3 relative">
               <input
                 onChange={handleChange}
                 onBlur={handleBlur}
-                name="userName"
-                value={values.userName}
+                name="firstName"
+                value={values.firstName}
                 type="text"
-                placeholder="Name"
+                placeholder="First Name"
                 className="border-b-2 bg-transparent w-full pl-5 pb-3 outline-none"
               />
               <div className="absolute top-1 left-0 text-gray-400">
                 <FiUser />
               </div>
-              {errors.userName && touched.userName && (
-                <small className="text-red-500">{errors.userName}</small>
+              {errors.firstName && touched.firstName && (
+                <small className="text-red-500">{errors.firstName}</small>
               )}
             </div>
-            <div className="mb-5 relative">
+            <div className="mb-3 relative">
+              <input
+                onChange={handleChange}
+                onBlur={handleBlur}
+                name="lastName"
+                value={values.lastName}
+                type="text"
+                placeholder="Last Name"
+                className="border-b-2 bg-transparent w-full pl-5 pb-3 outline-none"
+              />
+              <div className="absolute top-1 left-0 text-gray-400">
+                <FiUser />
+              </div>
+              {errors.lastName && touched.lastName && (
+                <small className="text-red-500">{errors.lastName}</small>
+              )}
+            </div>
+            <div className="mb-3 relative">
               <input
                 onChange={handleChange}
                 onBlur={handleBlur}
@@ -66,7 +115,7 @@ const Signup = () => {
                 <small className="text-red-500">{errors.email}</small>
               )}
             </div>
-            <div className="mb-5 relative">
+            <div className="mb-3 relative">
               <input
                 onChange={handleChange}
                 onBlur={handleBlur}
@@ -111,9 +160,10 @@ const Signup = () => {
             <div className="py-5 text-center">
               <button
                 type="submit"
+                disabled={isLoading}
                 className="bg-black/20 uppercase p-2 text-sm max-w-sm rounded-md sm:text-base sm:p-3 md:p-2 lg:w-32 hover:bg-black/30 hover:text-gray-300"
               >
-                signup
+                {isLoading ? <Loader /> : 'signup'}
               </button>
             </div>
             <div className="text-center text-sm pb-5">

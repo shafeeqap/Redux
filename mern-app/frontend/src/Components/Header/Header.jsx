@@ -3,12 +3,17 @@ import { CiLogin, CiLogout } from "react-icons/ci";
 import { Link } from "react-router-dom";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { useSelector } from "react-redux";
+import Dropdown from "../Dropdown/Dropdown";
+import { useLogoutMutation } from "../../features/user/usersApiSlice.js";
+import { logout } from "../../features/user/authSlice.js";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { userInfo } = useSelector((state) => state.auth);
 
+
   return (
+    <>
     <header className="p-4 bg-black/85">
       <nav>
         <div className="flex justify-between px-5 text-white">
@@ -17,10 +22,7 @@ const Header = () => {
           </div>
           <div className="hidden md:flex justify-between items-center">
             {userInfo ? (
-              <button className="flex items-center gap-1">
-                <CiLogout />
-                Logout
-              </button>
+              <Dropdown/>
             ) : (
               <Link to="/login" className="flex items-center gap-1">
                 <CiLogin />
@@ -37,11 +39,13 @@ const Header = () => {
         {isMenuOpen && (
           <ul className="md:hidden flex flex-col ml-4 mt-4 text-white">
             <li className="hover:bg-black/10 p-1 cursor-pointer">Login</li>
+            <li className="hover:bg-black/10 p-1 cursor-pointer">Profile</li>
             <li className="hover:bg-black/10 p-1 cursor-pointer">Logout</li>
           </ul>
         )}
       </nav>
     </header>
+    </>
   );
 };
 

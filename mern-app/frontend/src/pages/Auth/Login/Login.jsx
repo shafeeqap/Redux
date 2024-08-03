@@ -2,21 +2,21 @@ import React, { useEffect, useState } from "react";
 import { PiEyeThin, PiEyeSlashThin } from "react-icons/pi";
 import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
-import { loginValidation } from "../../validation/yupLoginValidation.js";
+import { loginValidation } from "../../../validation/yupLoginValidation.js";
 import { IoLockClosedOutline } from "react-icons/io5";
 import { TfiEmail } from "react-icons/tfi";
-import { useLoginMutation } from "../../features/user/usersApiSlice.js";
+import { useLoginMutation } from "../../../features/user/usersApiSlice.js";
 import { useDispatch, useSelector } from "react-redux";
-import { setCredentials } from "../../features/user/authSlice.js";
+import { setCredentials } from "../../../features/user/authSlice.js";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
-
+import Loader from "../../../Components/Loader/Loader.jsx";
 
 const initialValues = {
   email: "",
   password: "",
 };
+
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
@@ -26,12 +26,11 @@ const Login = () => {
 
   useEffect(() => {
     if (userInfo) {
-      // navigate("/");
+      navigate("/");
     }
   }, [navigate, userInfo]);
 
-  const { values, handleBlur, handleChange, handleSubmit, errors, touched } = 
-    useFormik({
+  const { values, handleBlur, handleChange, handleSubmit, errors, touched } = useFormik({
       initialValues: initialValues,
       validationSchema: loginValidation,
       onSubmit: async (values) =>{
@@ -106,7 +105,7 @@ const Login = () => {
                 disabled={isLoading}
                 className="bg-black/20 uppercase p-2 text-sm max-w-sm rounded-md sm:text-base sm:p-3 md:p-2 lg:w-32 hover:bg-black/30 hover:text-gray-300"
                 >
-                {isLoading ? "Loading..." : "Login"}
+                {isLoading ? <Loader /> : "Login"} 
               </button>
             </div>
             <div className="text-center text-sm">
