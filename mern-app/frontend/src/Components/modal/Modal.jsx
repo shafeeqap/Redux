@@ -1,6 +1,6 @@
-import UpdateProfile from "../../pages/Profile/UpdateProfile";
+import { MdClose } from "react-icons/md";
 
-const Modal = ({ isOpen, onClose, title, children, button }) => {
+const Modal = ({ isOpen, onClose, title, children }) => {
   if (!isOpen) return null;
 
   return (
@@ -16,6 +16,11 @@ const Modal = ({ isOpen, onClose, title, children, button }) => {
         onClick={(e) => e.stopPropagation()}
       >
         <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+          <div onClick={onClose} className="flex justify-end">
+            <div className="rounded-full hover:bg-slate-200 p-1">
+              <MdClose className="text-2xl cursor-pointer" />
+            </div>
+          </div>
           <div className="sm:flex sm:items-start">
             <div className="mt-3 text-center sm:ml-4 sm:mr-4 sm:mt-0 sm:text-left py-2 w-full">
               <h1
@@ -27,22 +32,6 @@ const Modal = ({ isOpen, onClose, title, children, button }) => {
               <div className="mt-10">{children}</div>
             </div>
           </div>
-        </div>
-        <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-          <button
-            type="button"
-            className="inline-flex w-full justify-center rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-700 sm:ml-3 sm:w-auto"
-            onClick="#"
-          >
-            {button}
-          </button>
-          <button
-            type="button"
-            className="mt-3 inline-flex w-full justify-center rounded-md bg-red-500 px-3 py-2 text-sm font-semibold text-white shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-red-600 sm:mt-0 sm:w-auto"
-            onClick={onClose}
-          >
-            Cancel
-          </button>
         </div>
       </div>
     </div>

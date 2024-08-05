@@ -14,7 +14,9 @@ const authUser = asyncHandler(async (req, res) => {
     res.status(201).json({
       _id: user._id,
       firstName: user.firstName,
+      lastName: user.lastName,
       email: user.email,
+      mobile: user.mobile,
     });
   } else {
     res.status(400);
@@ -73,7 +75,7 @@ const getUserProfile = asyncHandler(async (req, res) => {
     firstName: req.user.firstName,
     lastName: req.user.lastName,
     email: req.user.email,
-    phone: req.user.phone,
+    mobile: req.user.mobile,
   };
   res.status(200).json({ message: "User profile", user });
 });
@@ -86,9 +88,9 @@ const updateUserProfile = asyncHandler(async (req, res) => {
 
   if (user) {
     user.firstName = req.body.firstName || user.firstName;
-    user.lastName = req.body.lastName || uer.lastName;
+    user.lastName = req.body.lastName || user.lastName;
     user.email = req.body.email || user.email;
-    user.phone = req.body.phone || user.phone;
+    user.mobile = req.body.mobile || user.mobile;
 
     if (req.body.password) {
       user.password = req.body.password;
@@ -99,12 +101,34 @@ const updateUserProfile = asyncHandler(async (req, res) => {
       firstName: updatedUser.firstName,
       lastName: updatedUser.lastName,
       email: updatedUser.email,
-      phone: updatedUser.phone,
+      mobile: updatedUser.mobile,
     });
   } else {
     res.status(404);
     throw new Error("User not found");
   }
+});
+
+// @desc     Update user password
+// route     PUT /api/users/updatePassword
+// @access   Private
+const updatePassword = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user._id);
+
+  if (!user) {
+    return res.status(404).json({ message: "User not found" });
+  }
+
+  const isMatch = await user.matchPasswords(req.body.currentPassword);
+
+  if (!isMatch) {
+    res.status(400).json({ message: "Current password is incorrect" });
+  }
+
+  user.password = req.body.newPassword;
+  await user.save();
+
+  return res.status(200).json({ message: "Password updated successfully" });
 });
 
 export {
@@ -113,4 +137,5 @@ export {
   logoutUser,
   getUserProfile,
   updateUserProfile,
+  updatePassword,
 };

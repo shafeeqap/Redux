@@ -19,7 +19,7 @@ export const signupValidation = Yup.object({
       "Password must contain at least one special character"
     )
     .required("Please enter your password")
-    .min(3),
+    .min(6),
   cPassword: Yup.string()
     .oneOf([Yup.ref("password")], "Password not matched")
     .required("Please enter confirm password"),

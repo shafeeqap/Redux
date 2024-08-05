@@ -10,6 +10,6 @@ export const loginValidation = Yup.object({
       /[!@#$%^&*(),.?":{}|<>]/,
       "Password must contain at least one special character"
     )
-    .min(3)
+    .min(6)
     .required("Please enter your password")
 });

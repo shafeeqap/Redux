@@ -12,15 +12,7 @@ export const updateProfileValidation = Yup.object({
   email: Yup.string()
     .email("Please enter valid email")
     .required("Please enter your email"),
-  password: Yup.string()
-    .matches(/^[^\s]+$/, "Password cannot contain spaces")
-    .matches(
-      /[!@#$%^&*(),.?":{}|<>]/,
-      "Password must contain at least one special character"
-    )
-    .required("Please enter your password")
-    .min(3),
-  cPassword: Yup.string()
-    .oneOf([Yup.ref("password")], "Password not matched")
-    .required("Please enter confirm password"),
+  mobile: Yup.string()
+  .matches(/^(?!(\d)\1{9})[5-9]\d{9}$/, "Invalid mobile number")
+  .required("Please enter mobile number"),
 });
