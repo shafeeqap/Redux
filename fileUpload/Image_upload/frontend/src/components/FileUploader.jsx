@@ -77,7 +77,7 @@ const FileUploader = () => {
               <img
                 src={previewImage}
                 alt=""
-                className="max-w-20 max-h-20 n rounded-full border"
+                className="min-w-20 min-h-20 rounded-full border"
               />
             ) : (
               <RiImageAddFill className="min-w-20 min-h-20 sm:text-8xl p-3" />
@@ -122,7 +122,7 @@ const FileUploader = () => {
                   <img
                     src={`http://localhost:5001/${fileData.file.filename}`}
                     alt="Uploaded"
-                    className="sm:w-96 object-cover"
+                    className="sm:w-96 sm:h-96 object-cover"
                   />
                 </div>
               </div>
