@@ -31,7 +31,7 @@ const UpdateProfile = ({ handleProfileModalClose }) => {
     });
   }, [userInfo]);
 
-  const hasChanges = (formValues) => {
+  const hasChanges = (values) => {
     return (
       values.firstName !== initialValues.firstName ||
       values.lastName !== initialValues.lastName ||

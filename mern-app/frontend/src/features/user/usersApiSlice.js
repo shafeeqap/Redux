@@ -30,6 +30,26 @@ export const userApiSlice = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
+    getUser: builder.query({
+      query: () => ({
+        url: `${USERS_URL}/profile`,
+        method: 'GET',
+      })
+    }),
+    uploadProfileImage: builder.mutation({
+      query: (data) => ({
+        url: `${USERS_URL}/profileImage`,
+        method: "POST",
+        body: data,
+      })
+    }),
+    getProfileImage: builder.query({
+      query: (id) => ({
+        url: `${USERS_URL}/profileImage/${id}`,
+        method: 'GET',
+        body: id,
+      })
+    }),
     updatePassword: builder.mutation({
       query: (data) => ({
         url: `${USERS_URL}/updatePassword`,
@@ -46,4 +66,7 @@ export const {
   useRegisterMutation,
   useUpdateUserMutation,
   useUpdatePasswordMutation,
+  useUploadProfileImageMutation,
+  useGetUserQuery,
+  useGetProfileImageQuery,
 } = userApiSlice;

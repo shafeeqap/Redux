@@ -70,12 +70,14 @@ const logoutUser = asyncHandler(async (req, res) => {
 // route     GET /api/users/profile
 // @access   Private
 const getUserProfile = asyncHandler(async (req, res) => {
+
   const user = {
     _id: req.user._id,
     firstName: req.user.firstName,
     lastName: req.user.lastName,
     email: req.user.email,
     mobile: req.user.mobile,
+    profileImage: req.user.profileImage.toString("base64"),
   };
   res.status(200).json({ message: "User profile", user });
 });
@@ -114,21 +116,71 @@ const updateUserProfile = asyncHandler(async (req, res) => {
 // @access   Private
 const updatePassword = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user._id);
-
   if (!user) {
     return res.status(404).json({ message: "User not found" });
   }
-
   const isMatch = await user.matchPasswords(req.body.currentPassword);
 
   if (!isMatch) {
     res.status(400).json({ message: "Current password is incorrect" });
   }
-
   user.password = req.body.newPassword;
   await user.save();
-
   return res.status(200).json({ message: "Password updated successfully" });
+});
+
+// @desc     Add profile image
+// route     POST /api/users/profileImage
+// @access   Private
+const uploadProfileImage = asyncHandler(async (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ message: "No file uploaded" });
+  }
+
+  if (!req.user) {
+    return res.status(401).json({ message: "User not authenticated" });
+  }
+  const user = await User.findById(req.user._id);
+
+  if (!user) {
+    return res.status(404).json({ message: "User not found" });
+  }
+
+  user.profileImage = `${req.file.filename}`;
+  const updatedUser = await user.save();
+
+  res.status(200).json({
+    _id: updatedUser._id,
+    firstName: updatedUser.firstName,
+    lastName: updatedUser.lastName,
+    email: updatedUser.email,
+    mobile: updatedUser.mobile,
+    profileImage: updatedUser.profileImage,
+    message: "Profile image added successfully",
+  });
+});
+
+// @desc     Get profile image
+// route     GET /api/users/profileImage
+// @access   Private
+const getProfileImage = asyncHandler(async (req, res) => {
+  console.log(req.params.id);
+  if (req.params.id) {
+    const image = await User.findById(req.params.id);
+console.log(image, 'image');
+    if (!image) {
+      return res.status(404).json({ error: "Image not found" });
+    }
+    const imageData = image.data.toString("base64");
+
+    res.json({
+      message: "Image fetched successfully",
+      data: imageData,
+      contentType: image.contentType,
+    });
+  } else {
+    return res.status(404).json({ message: "User not found" });
+  }
 });
 
 export {
@@ -138,4 +190,6 @@ export {
   getUserProfile,
   updateUserProfile,
   updatePassword,
+  uploadProfileImage,
+  getProfileImage,
 };

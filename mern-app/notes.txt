@@ -18,22 +18,9 @@ to catch and pass errors to the Express error-handling middleware.
 Frontend
 --------
 1. vite@latest 
-2. @reduxjs/toolkit
+2. @reduxjs/redux-toolkit
 3. react-redux
 4. react-router-dom 
 5. react-icons 
 6. Formik 
 7. Yup 
-8. react-toastify
-
-
-========================== root directory package.json ====================================
-  "scripts": {
-    "start": "node backend/server.js",
-    "server": "nodemon backend/server.js",
-    "client": "npm run dev --prefix frontend",
-    "dev": "concurrently \"npm run server\" \"npm run client\""
-  },
-
-npm install -D concurrently :- for start both frontend and Backend
-npm start dev
