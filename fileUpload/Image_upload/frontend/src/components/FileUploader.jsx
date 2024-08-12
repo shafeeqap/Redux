@@ -122,7 +122,7 @@ const FileUploader = () => {
                   <img
                     src={`http://localhost:5001/${fileData.file.filename}`}
                     alt="Uploaded"
-                    className="sm:w-96 sm:h-96 object-cover"
+                    className="sm:w-96 sm:h-96"
                   />
                 </div>
               </div>
