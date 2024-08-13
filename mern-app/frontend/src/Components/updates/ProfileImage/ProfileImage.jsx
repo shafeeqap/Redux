@@ -1,18 +1,24 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useUploadProfileImageMutation } from "../../../features/user/usersApiSlice";
 import { IoSave } from "react-icons/io5";
 import { FaTrashCan } from "react-icons/fa6";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setCredentials } from "../../../features/user/authSlice";
-import Profile from "../../../pages/Profile/Profile";
+// import Profile from "../../../pages/Profile/Profile";
+import { useGetUserQuery } from "../../../features/user/usersApiSlice";
+
 
 const ProfileImage = ({ handleProfileImageModalClose }) => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewImage, setPreviewImage] = useState(null);
-  const [uploadProfileImage, { isLoading }] = useUploadProfileImageMutation();
-  const { userInfo } = useSelector((state) => state.auth);
+  const [imageId, setImageId] = useState(() => localStorage.getItem("imageId") || "");
+  const [uploadProfileImage] = useUploadProfileImageMutation();
+  const { data: fileData } = useGetUserQuery(imageId, { skip: !imageId });
+  // const { userInfo } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
+  console.log(fileData, 'fileData');
+  
   const handleClick = () => {
     document.getElementById("fileInput").click();
   };
@@ -36,6 +42,9 @@ const ProfileImage = ({ handleProfileImageModalClose }) => {
     try {
       const response = await uploadProfileImage(formData).unwrap();
       console.log(response, "response");
+      console.log(response._id, "response.id");
+      setImageId(response._id)
+
       const { profileImage } = response;
 
       // Update localStorage

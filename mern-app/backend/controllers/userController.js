@@ -77,7 +77,8 @@ const getUserProfile = asyncHandler(async (req, res) => {
     lastName: req.user.lastName,
     email: req.user.email,
     mobile: req.user.mobile,
-    profileImage: req.user.profileImage.toString("base64"),
+    profileImage: req.user.profileImage,
+    // profileImage: req.user.profileImage.toString("base64"),
   };
   res.status(200).json({ message: "User profile", user });
 });
@@ -164,7 +165,7 @@ const uploadProfileImage = asyncHandler(async (req, res) => {
 // route     GET /api/users/profileImage
 // @access   Private
 const getProfileImage = asyncHandler(async (req, res) => {
-  console.log(req.params.id);
+  console.log(req.params.id, 'params.id');
   if (req.params.id) {
     const image = await User.findById(req.params.id);
 console.log(image, 'image');

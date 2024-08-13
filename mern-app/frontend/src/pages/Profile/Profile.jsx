@@ -1,43 +1,30 @@
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import { RiEdit2Line } from "react-icons/ri";
 import { FaPlus } from "react-icons/fa6";
 import Header from "../../Components/Header/Header";
-import { useSelector } from "react-redux";
 import Modal from "../../Components/modal/Modal";
 import UpdateProfile from "../../Components/updates/UpadateProfile/UpdateProfile";
 import UpdatePassword from "../../Components/updates/UpdatePassword/UpdatePassword";
 import ProfileImage from "../../Components/updates/ProfileImage/ProfileImage";
 import { useGetUserQuery } from "../../features/user/usersApiSlice";
 import { CgProfile } from "react-icons/cg";
-import profile_icon from "../../assets/profile-icon.png";
 
 const Profile = () => {
-  // const [firstName, setFirstName] = useState("");
-  // const [lastName, setLastName] = useState("");
-  // const [email, setEmail] = useState("");
-  // const [mobile, setMobile] = useState("");
   // const [profileImage, setProfileImage] = useState("");
-  const { userInfo } = useSelector((state) => state.auth);
+  // const { userInfo } = useSelector((state) => state.auth);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
   const [isProfileImageModalOpen, setIsProfileImageModalOpen] = useState(false);
 
   // Fetch user data
-  const { data, isLoading, isError } = useGetUserQuery();
+  const { data } = useGetUserQuery();
+  console.log(data, "data");
 
-  // useEffect(() => {
-  //   setFirstName(userInfo.firstName);
-  //   setLastName(userInfo.lastName);
-  //   setMobile(userInfo.mobile);
-  //   setEmail(userInfo.email);
-  //   setProfileImage(userInfo.profileImage);
-  // }, [userInfo]);
+  // const user = data?.user || {};
+  // const { firstName, lastName, email, mobile, profileImage } = user;
 
-  const user = data?.user || {};
-  const { firstName, lastName, email, mobile, profileImage } = user;
-
-  const imageUrl = `http://localhost:5000/public/${user.profileImage}`;
-  const imageSrc = profileImage ? imageUrl : <CgProfile />;
+  // const imageUrl = `http://localhost:5000/${data?.user.profileImage}`;
+  // const imageSrc = profileImage ? imageUrl : <CgProfile />;
 
   // const imageSrc = `data:${data?.contentType};base64,${data?.data}`; // Construct image URL
 
@@ -49,7 +36,7 @@ const Profile = () => {
   // ? `data:<span class="math-inline">\{data\.contentType\};base64,</span>{data.profileImage}` // Construct image URL
   // : null;
 
-  console.log(imageSrc, "imageSrc");
+  // console.log(imageSrc, "imageSrc");
 
   const handleProfileModalOpen = () => setIsProfileModalOpen(true);
   const handleProfileModalClose = () => setIsProfileModalOpen(false);
@@ -57,7 +44,7 @@ const Profile = () => {
   const handlePasswordModalClose = () => setIsPasswordModalOpen(false);
   const handleProfileImageModalOpen = () => setIsProfileImageModalOpen(true);
   const handleProfileImageModalClose = () => setIsProfileImageModalOpen(false);
-
+  
   return (
     <div className="h-screen overflow-hidden">
       <Header />
@@ -69,7 +56,7 @@ const Profile = () => {
                 <div className="flex justify-center">
                   <div className="bg-blue-400 rounded-full w-24 h-24 relative">
                     <img
-                      src={profileImage}
+                      src={`http://localhost:5000/userProfile/${data?.user.profileImage}`}
                       alt="profile-image"
                       className="w-24 h-24 rounded-full"
                     />
@@ -106,7 +93,7 @@ const Profile = () => {
                       First Name
                     </label>
                     <div className="bg-gray-200 rounded p-1 h-8 min-w-fit">
-                      <h1>{firstName}</h1>
+                      <h1>{data?.user.firstName}</h1>
                     </div>
                   </div>
                   <div className="mt-4 px-2">
@@ -117,7 +104,7 @@ const Profile = () => {
                       Last Name
                     </label>
                     <div className="bg-gray-200 rounded p-1 h-8 min-w-fit">
-                      <h1>{lastName}</h1>
+                      <h1>{data?.user.lastName}</h1>
                     </div>
                   </div>
                   <div className="mt-4 px-2">
@@ -128,7 +115,7 @@ const Profile = () => {
                       Mobile
                     </label>
                     <div className="bg-gray-200 rounded p-1 h-8">
-                      <h1>{mobile}</h1>
+                      <h1>{data?.user.mobile}</h1>
                     </div>
                   </div>
                   <div className="mt-4 px-2 mb-5">
@@ -139,7 +126,7 @@ const Profile = () => {
                       Email
                     </label>
                     <div className="bg-gray-200 rounded p-1 h-8 min-w-fit">
-                      <h1>{email}</h1>
+                      <h1>{data?.user.email}</h1>
                     </div>
                   </div>
                 </div>
