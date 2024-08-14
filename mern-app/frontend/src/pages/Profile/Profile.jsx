@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { RiEdit2Line } from "react-icons/ri";
 import { FaPlus } from "react-icons/fa6";
 import Header from "../../Components/Header/Header";
@@ -10,33 +10,21 @@ import { useGetUserQuery } from "../../features/user/usersApiSlice";
 import { CgProfile } from "react-icons/cg";
 
 const Profile = () => {
-  // const [profileImage, setProfileImage] = useState("");
   // const { userInfo } = useSelector((state) => state.auth);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
   const [isProfileImageModalOpen, setIsProfileImageModalOpen] = useState(false);
+  const [profileImage, setProfileImage] = useState("");
 
   // Fetch user data
   const { data } = useGetUserQuery();
   console.log(data, "data");
 
-  // const user = data?.user || {};
-  // const { firstName, lastName, email, mobile, profileImage } = user;
-
-  // const imageUrl = `http://localhost:5000/${data?.user.profileImage}`;
-  // const imageSrc = profileImage ? imageUrl : <CgProfile />;
-
-  // const imageSrc = `data:${data?.contentType};base64,${data?.data}`; // Construct image URL
-
-  // const imageSrc = data?.contentType && data?.data
-  // ? `data:${data.contentType};base64,${data.data}`
-  // : null; // Or provide a default image URL
-
-  // const imageSrc = data?.profileImage
-  // ? `data:<span class="math-inline">\{data\.contentType\};base64,</span>{data.profileImage}` // Construct image URL
-  // : null;
-
-  // console.log(imageSrc, "imageSrc");
+  useEffect(() =>{
+    if(data){
+      setProfileImage(data.user.profileImage);
+    }
+  }, [data])
 
   const handleProfileModalOpen = () => setIsProfileModalOpen(true);
   const handleProfileModalClose = () => setIsProfileModalOpen(false);
@@ -56,7 +44,7 @@ const Profile = () => {
                 <div className="flex justify-center">
                   <div className="bg-blue-400 rounded-full w-24 h-24 relative">
                     <img
-                      src={`http://localhost:5000/userProfile/${data?.user.profileImage}`}
+                      src={`http://localhost:5000/userProfile/${profileImage}`}
                       alt="profile-image"
                       className="w-24 h-24 rounded-full"
                     />
@@ -170,6 +158,7 @@ const Profile = () => {
       >
         <ProfileImage
           handleProfileImageModalClose={handleProfileImageModalClose}
+          setProfileImage={setProfileImage}
         />
       </Modal>
     </div>

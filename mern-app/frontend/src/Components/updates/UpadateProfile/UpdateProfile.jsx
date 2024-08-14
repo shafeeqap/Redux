@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useFormik } from "formik";
 import { updateProfileValidation } from "../../../validation/updateProfileValidation.js";
 import { TfiEmail } from "react-icons/tfi";
@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setCredentials } from "../../../features/user/authSlice.js";
 import Loader from "../../Loader/Loader.jsx";
 
-const UpdateProfile = ({ handleProfileModalClose }) => {
+const UpdateProfile = ( handleProfileModalClose ) => {
   const [updateProfile, { isLoading }] = useUpdateUserMutation();
   const { userInfo } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
@@ -47,7 +47,6 @@ const UpdateProfile = ({ handleProfileModalClose }) => {
     handleSubmit,
     errors,
     touched,
-    setFieldError,
   } = useFormik({
     initialValues: {
       firstName: userInfo.firstName,

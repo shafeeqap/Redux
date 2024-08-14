@@ -1,23 +1,27 @@
-import { useState } from "react";
-import { useUploadProfileImageMutation } from "../../../features/user/usersApiSlice";
+import { useState, useEffect } from "react";
+import { useUploadProfileImageMutation, useGetUserQuery } from "../../../features/user/usersApiSlice";
 import { IoSave } from "react-icons/io5";
 import { FaTrashCan } from "react-icons/fa6";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setCredentials } from "../../../features/user/authSlice";
-// import Profile from "../../../pages/Profile/Profile";
-import { useGetUserQuery } from "../../../features/user/usersApiSlice";
 
 
-const ProfileImage = ({ handleProfileImageModalClose }) => {
+const ProfileImage = ({ handleProfileImageModalClose, setProfileImage }) => {
   const [selectedFile, setSelectedFile] = useState(null);
-  const [previewImage, setPreviewImage] = useState(null);
-  const [imageId, setImageId] = useState(() => localStorage.getItem("imageId") || "");
+  const [previewImage, setPreviewImage] = useState("");
   const [uploadProfileImage] = useUploadProfileImageMutation();
-  const { data: fileData } = useGetUserQuery(imageId, { skip: !imageId });
-  // const { userInfo } = useSelector((state) => state.auth);
+  const { userInfo } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
-
-  console.log(fileData, 'fileData');
+  const { data: userData } = useGetUserQuery(userInfo?._id, { skip: !userInfo?._id });
+  
+  console.log(userData, 'userData');
+  
+  // Set the initial preview image from the user data
+  useEffect(() => {
+    if (userData) {
+      setPreviewImage(`http://localhost:5000/userProfile/${userData.user.profileImage}`);
+    }
+  }, [userData]);
   
   const handleClick = () => {
     document.getElementById("fileInput").click();
@@ -39,18 +43,17 @@ const ProfileImage = ({ handleProfileImageModalClose }) => {
 
     const formData = new FormData();
     formData.append("profileImage", selectedFile);
+
     try {
       const response = await uploadProfileImage(formData).unwrap();
-      console.log(response, "response");
-      console.log(response._id, "response.id");
-      setImageId(response._id)
 
       const { profileImage } = response;
 
       // Update localStorage
-      const userInfo = JSON.parse(localStorage.getItem("userInfo"));
-      userInfo.profileImage = profileImage;
-      localStorage.setItem("userInfo", JSON.stringify(userInfo));
+      const updatedUserInfo = { ...userInfo, profileImage };
+      localStorage.setItem("userInfo", JSON.stringify(updatedUserInfo));
+      
+      setProfileImage(profileImage);
       
       dispatch(setCredentials(response));
       handleProfileImageModalClose();
@@ -60,6 +63,8 @@ const ProfileImage = ({ handleProfileImageModalClose }) => {
     }
   };
 
+  console.log(previewImage, 'previewImage');
+  
   return (
     <div className="flex flex-col justify-center items-center">
       <div className="text-center bg-black/25 rounded-full cursor-pointer">
