@@ -33,7 +33,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
     getUser: builder.query({
       query: () => ({
         url: `${USERS_URL}/profile`,
-        // method: 'GET',
+        method: 'GET',
       })
     }),
     uploadProfileImage: builder.mutation({
@@ -43,18 +43,24 @@ export const userApiSlice = apiSlice.injectEndpoints({
         body: data,
       })
     }),
-    getProfileImage: builder.query({
-      query: (id) => ({
-        url: `${USERS_URL}/profileImage/${id}`,
+    // getProfileImage: builder.query({
+    //   query: (id) => ({
+    //     url: `${USERS_URL}/profileImage/${id}`,
         // method: 'GET',
         // body: id,
-      })
-    }),
+    //   })
+    // }),
     updatePassword: builder.mutation({
       query: (data) => ({
         url: `${USERS_URL}/updatePassword`,
         method: "PUT",
         body: data,
+      }),
+    }),
+    deleteProfileImage: builder.mutation({
+      query: () =>({
+        url:`${USERS_URL}/profileImage`,
+        method: "DELETE",
       }),
     }),
   }),
@@ -68,5 +74,6 @@ export const {
   useUpdatePasswordMutation,
   useUploadProfileImageMutation,
   useGetUserQuery,
-  useGetProfileImageQuery,
+  // useGetProfileImageQuery,
+  useDeleteProfileImageMutation,
 } = userApiSlice;

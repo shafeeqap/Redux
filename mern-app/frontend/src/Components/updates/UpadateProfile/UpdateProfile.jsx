@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setCredentials } from "../../../features/user/authSlice.js";
 import Loader from "../../Loader/Loader.jsx";
 
-const UpdateProfile = ( handleProfileModalClose ) => {
+const UpdateProfile = ( {handleProfileModalClose} ) => {
   const [updateProfile, { isLoading }] = useUpdateUserMutation();
   const { userInfo } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
@@ -57,6 +57,7 @@ const UpdateProfile = ( handleProfileModalClose ) => {
     validationSchema: updateProfileValidation,
     enableReinitialize: true,
     onSubmit: async (formValues) => {
+      
       try {
         if(!hasChanges(formValues)){
           alert("No changes detected.");
@@ -71,6 +72,7 @@ const UpdateProfile = ( handleProfileModalClose ) => {
         dispatch(setCredentials({ ...res }));
         handleProfileModalClose();
       } catch (error) {
+        console.log(error);
         toast.error(
           error?.data?.message || "An error occurred during register."
         );
@@ -152,12 +154,13 @@ const UpdateProfile = ( handleProfileModalClose ) => {
           <button
             type="submit"
             disabled={!hasChanges(values)}
-            className="bg-black/20 uppercase p-2 text-sm max-w-sm rounded-md sm:text-base sm:p-3 md:p-2 lg:w-full hover:bg-black/30 hover:text-gray-800"
+            className="bg-black/20 uppercase p-2 text-sm max-w-sm rounded-md sm:text-base sm:p-3 md:p-2 lg:w-full hover:bg-black/30 hover:text-gray-800 cursor-pointer"
           >
             {isLoading ? <Loader /> : "update"}
           </button>
         </div>
       </form>
+      <ToastContainer />
     </div>
   );
 };

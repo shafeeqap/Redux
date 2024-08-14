@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useFormik } from "formik";
 import { IoLockClosedOutline } from "react-icons/io5";
 import { updatePasswordValidation } from '../../../validation/updatePasswordValidation.js';
@@ -6,13 +6,14 @@ import { PiEyeThin, PiEyeSlashThin } from "react-icons/pi";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useUpdatePasswordMutation } from '../../../features/user/usersApiSlice.js';
-
+import { setCredentials } from '../../../features/user/authSlice.js';
+import { useDispatch } from 'react-redux';
 
 
 const UpdatePassword = ({handlePasswordModalClose}) => {
   const [showPassword, setShowPassword] = useState(false);
   const [updatePassword, { isLoading }] = useUpdatePasswordMutation();
-
+  const dispatch = useDispatch();
   const formik = useFormik({
     initialValues: {
       currentPassword: "",
@@ -28,8 +29,10 @@ const UpdatePassword = ({handlePasswordModalClose}) => {
           error: "Password update failed!",
         });
         console.log(res);
+        dispatch(setCredentials({...res}))
         handlePasswordModalClose();
       } catch (error) {
+        console.log(error);
         toast.error(error?.data?.message || "An error occurred during password update.");
       }
     }

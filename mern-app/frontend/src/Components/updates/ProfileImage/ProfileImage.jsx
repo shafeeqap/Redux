@@ -1,28 +1,29 @@
 import { useState, useEffect } from "react";
-import { useUploadProfileImageMutation, useGetUserQuery } from "../../../features/user/usersApiSlice";
+import { useUploadProfileImageMutation, useDeleteProfileImageMutation } from "../../../features/user/usersApiSlice";
 import { IoSave } from "react-icons/io5";
 import { FaTrashCan } from "react-icons/fa6";
 import { useDispatch, useSelector } from "react-redux";
 import { setCredentials } from "../../../features/user/authSlice";
 
 
-const ProfileImage = ({ handleProfileImageModalClose, setProfileImage }) => {
+
+const ProfileImage = ({ handleProfileImageModalClose }) => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewImage, setPreviewImage] = useState("");
   const [uploadProfileImage] = useUploadProfileImageMutation();
+  const [deleteProfileImage] = useDeleteProfileImageMutation();
   const { userInfo } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
-  const { data: userData } = useGetUserQuery(userInfo?._id, { skip: !userInfo?._id });
-  
-  console.log(userData, 'userData');
-  
-  // Set the initial preview image from the user data
+
+  // Set the initial preview image from the userInfo
   useEffect(() => {
-    if (userData) {
-      setPreviewImage(`http://localhost:5000/userProfile/${userData.user.profileImage}`);
+    if (userInfo) {
+      setPreviewImage(
+        `http://localhost:5000/userProfile/${userInfo.profileImage}`
+      );
     }
-  }, [userData]);
-  
+  }, [userInfo]);
+
   const handleClick = () => {
     document.getElementById("fileInput").click();
   };
@@ -52,19 +53,35 @@ const ProfileImage = ({ handleProfileImageModalClose, setProfileImage }) => {
       // Update localStorage
       const updatedUserInfo = { ...userInfo, profileImage };
       localStorage.setItem("userInfo", JSON.stringify(updatedUserInfo));
-      
-      setProfileImage(profileImage);
-      
+
       dispatch(setCredentials(response));
       handleProfileImageModalClose();
-
     } catch (error) {
       console.log("Error uploading image:", error);
     }
   };
 
-  console.log(previewImage, 'previewImage');
-  
+  const removeImage = async () => {
+    try {
+      const response = await deleteProfileImage().unwrap();
+      console.log(response, 'response');
+      
+      const { profileImage } = response;
+
+      const updatedUserInfo = { ...userInfo, profileImage };
+      console.log(updatedUserInfo, 'updatedUserInfo');
+      
+      localStorage.setItem("userInfo", JSON.stringify(updatedUserInfo));
+      
+      dispatch(setCredentials(response));
+      setPreviewImage("");
+
+    } catch (error) {
+      console.log(error);
+      
+    }
+  };
+
   return (
     <div className="flex flex-col justify-center items-center">
       <div className="text-center bg-black/25 rounded-full cursor-pointer">
@@ -89,7 +106,10 @@ const ProfileImage = ({ handleProfileImageModalClose, setProfileImage }) => {
           <IoSave />
           Save
         </button>
-        <button className="flex justify-center items-center gap-2 bg-red-700 p-2 rounded-md min-w-28 text-white hover:bg-red-800">
+        <button
+          onClick={removeImage}
+          className="flex justify-center items-center gap-2 bg-red-700 p-2 rounded-md min-w-28 text-white hover:bg-red-800"
+        >
           <FaTrashCan />
           Remove
         </button>

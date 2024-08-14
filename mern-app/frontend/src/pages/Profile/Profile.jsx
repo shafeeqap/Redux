@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { RiEdit2Line } from "react-icons/ri";
 import { FaPlus } from "react-icons/fa6";
 import Header from "../../Components/Header/Header";
@@ -7,24 +7,19 @@ import UpdateProfile from "../../Components/updates/UpadateProfile/UpdateProfile
 import UpdatePassword from "../../Components/updates/UpdatePassword/UpdatePassword";
 import ProfileImage from "../../Components/updates/ProfileImage/ProfileImage";
 import { useGetUserQuery } from "../../features/user/usersApiSlice";
-import { CgProfile } from "react-icons/cg";
+import { useSelector } from "react-redux";
+
 
 const Profile = () => {
-  // const { userInfo } = useSelector((state) => state.auth);
+  const { userInfo } = useSelector((state) => state.auth);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
   const [isProfileImageModalOpen, setIsProfileImageModalOpen] = useState(false);
-  const [profileImage, setProfileImage] = useState("");
 
   // Fetch user data
   const { data } = useGetUserQuery();
-  console.log(data, "data");
-
-  useEffect(() =>{
-    if(data){
-      setProfileImage(data.user.profileImage);
-    }
-  }, [data])
+  
+  
 
   const handleProfileModalOpen = () => setIsProfileModalOpen(true);
   const handleProfileModalClose = () => setIsProfileModalOpen(false);
@@ -36,7 +31,7 @@ const Profile = () => {
   return (
     <div className="h-screen overflow-hidden">
       <Header />
-      <div className="bg-black/65 h-screen flex justify-center items-center sm:px-10 overflow-hidden">
+      <div className="bg-black/65 h-screen flex justify-center sm:px-10 overflow-hidden">
         <div className="sm:w-1/2 bg-white flex-col justify-center py-5">
           <div className="flex sm:flex-row h-[400px] gap-2 sm:p-4 min-w-fit">
             <div className="w-1/2 flex-row justify-center">
@@ -44,7 +39,7 @@ const Profile = () => {
                 <div className="flex justify-center">
                   <div className="bg-blue-400 rounded-full w-24 h-24 relative">
                     <img
-                      src={`http://localhost:5000/userProfile/${profileImage}`}
+                      src={`http://localhost:5000/userProfile/${userInfo.profileImage}`}
                       alt="profile-image"
                       className="w-24 h-24 rounded-full"
                     />
@@ -133,7 +128,7 @@ const Profile = () => {
             </div>
           </div>
           <footer>
-            <div className="bg-gray-200 h-28 w-full"></div>
+            <div className="bg-gray-200 h-32 w-full"></div>
           </footer>
         </div>
       </div>
@@ -158,7 +153,6 @@ const Profile = () => {
       >
         <ProfileImage
           handleProfileImageModalClose={handleProfileImageModalClose}
-          setProfileImage={setProfileImage}
         />
       </Modal>
     </div>

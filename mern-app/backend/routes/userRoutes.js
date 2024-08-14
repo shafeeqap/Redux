@@ -7,7 +7,7 @@ import {
   updateUserProfile,
   updatePassword,
   uploadProfileImage,
-  getProfileImage,
+  deleteProfileImage,
 } from "../controllers/userController.js";
 import { protect } from "../middlewares/authMiddleware.js";
 import { upload } from "../middlewares/fileUploadMiddleware.js";
@@ -20,7 +20,7 @@ userRouter.post("/logout", logoutUser);
 userRouter.route("/profile").get(protect, getUserProfile).put(protect, updateUserProfile);
 userRouter.put("/updatePassword", protect, updatePassword);
 userRouter.post("/profileImage", upload.single('profileImage'), protect, uploadProfileImage);
-userRouter.get("/profileImage:id", protect, getProfileImage);
+userRouter.delete("/profileImage", protect, deleteProfileImage);
 
 
 export default userRouter;

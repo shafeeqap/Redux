@@ -1,6 +1,12 @@
 import asyncHandler from "express-async-handler";
 import User from "../models/users.js";
 import generateToken from "../utils/generateToken.js";
+import path from 'path';
+import fs from 'fs';
+import { fileURLToPath } from "url"; 
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // @desc     Auth User/set token
 // route     POST /api/users/auth
@@ -70,7 +76,6 @@ const logoutUser = asyncHandler(async (req, res) => {
 // route     GET /api/users/profile
 // @access   Private
 const getUserProfile = asyncHandler(async (req, res) => {
-
   const user = {
     _id: req.user._id,
     firstName: req.user.firstName,
@@ -78,7 +83,6 @@ const getUserProfile = asyncHandler(async (req, res) => {
     email: req.user.email,
     mobile: req.user.mobile,
     profileImage: req.user.profileImage,
-    // profileImage: req.user.profileImage.toString("base64"),
   };
   res.status(200).json({ message: "User profile", user });
 });
@@ -94,7 +98,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
     user.lastName = req.body.lastName || user.lastName;
     user.email = req.body.email || user.email;
     user.mobile = req.body.mobile || user.mobile;
-
+    user.profileImage = req.body.profileImage || user.profileImage;
     if (req.body.password) {
       user.password = req.body.password;
     }
@@ -105,6 +109,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
       lastName: updatedUser.lastName,
       email: updatedUser.email,
       mobile: updatedUser.mobile,
+      profileImage: updatedUser.profileImage,
     });
   } else {
     res.status(404);
@@ -127,7 +132,14 @@ const updatePassword = asyncHandler(async (req, res) => {
   }
   user.password = req.body.newPassword;
   await user.save();
-  return res.status(200).json({ message: "Password updated successfully" });
+  return res.status(200).json({
+    _id: user._id,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    email: user.email,
+    mobile: user.mobile,
+    profileImage: user.profileImage,
+  });
 });
 
 // @desc     Add profile image
@@ -164,26 +176,48 @@ const uploadProfileImage = asyncHandler(async (req, res) => {
 // @desc     Get profile image
 // route     GET /api/users/profileImage
 // @access   Private
-const getProfileImage = asyncHandler(async (req, res) => {
-  console.log(req.params.id, 'params.id');
-  if (req.params.id) {
-    const image = await User.findById(req.params.id);
-console.log(image, 'image');
-    if (!image) {
-      return res.status(404).json({ error: "Image not found" });
-    }
-    const imageData = image.data.toString("base64");
+// const getProfileImage = asyncHandler(async (req, res) => {
+//   console.log(req.params.id, "params.id");
+//   if (req.params.id) {
+//     const image = await User.findById(req.params.id);
+//     console.log(image, "image");
+//     if (!image) {
+//       return res.status(404).json({ error: "Image not found" });
+//     }
+//     const imageData = image.data.toString("base64");
 
-    res.json({
-      message: "Image fetched successfully",
-      data: imageData,
-      contentType: image.contentType,
-    });
-  } else {
-    return res.status(404).json({ message: "User not found" });
+//     res.json({
+//       message: "Image fetched successfully",
+//       data: imageData,
+//       contentType: image.contentType,
+//     });
+//   } else {
+//     return res.status(404).json({ message: "User not found" });
+//   }
+// });
+
+// @desc     Delete profile image
+// route     DELETE /api/users/profileImage
+// @access   Private
+const deleteProfileImage = asyncHandler(async(req, res) =>{
+  const userId = req.user._id;
+  const user = await User.findById(userId);
+
+  if(!user){
+    res.status(404).json({ message:"User not found"});
   }
-});
 
+  const imagePath = path.join(__dirname, "../public/userProfile");
+
+  // Remove the image file from the server
+  if(fs.existsSync(imagePath)){
+    fs.unlinkSync(imagePath);
+  }
+
+  user.profileImage = "";
+  await user.save();
+
+})
 export {
   authUser,
   registerUser,
@@ -192,5 +226,6 @@ export {
   updateUserProfile,
   updatePassword,
   uploadProfileImage,
-  getProfileImage,
+  // getProfileImage,
+  deleteProfileImage,
 };
