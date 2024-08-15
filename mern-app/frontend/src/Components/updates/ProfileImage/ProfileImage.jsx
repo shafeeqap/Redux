@@ -4,7 +4,7 @@ import { IoSave } from "react-icons/io5";
 import { FaTrashCan } from "react-icons/fa6";
 import { useDispatch, useSelector } from "react-redux";
 import { setCredentials } from "../../../features/user/authSlice";
-
+import default_image from "../../../assets/profile-icon.png";
 
 
 const ProfileImage = ({ handleProfileImageModalClose }) => {
@@ -15,12 +15,11 @@ const ProfileImage = ({ handleProfileImageModalClose }) => {
   const { userInfo } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
-  // Set the initial preview image from the userInfo
   useEffect(() => {
-    if (userInfo) {
-      setPreviewImage(
-        `http://localhost:5000/userProfile/${userInfo.profileImage}`
-      );
+    if (userInfo && userInfo.profileImage) {
+      setPreviewImage(`http://localhost:5000/userProfile/${userInfo.profileImage}`);
+    } else{
+      setPreviewImage(default_image);
     }
   }, [userInfo]);
 
@@ -50,7 +49,7 @@ const ProfileImage = ({ handleProfileImageModalClose }) => {
 
       const { profileImage } = response;
 
-      // Update localStorage
+      // Update localStorage with the new profile image
       const updatedUserInfo = { ...userInfo, profileImage };
       localStorage.setItem("userInfo", JSON.stringify(updatedUserInfo));
 
@@ -61,26 +60,24 @@ const ProfileImage = ({ handleProfileImageModalClose }) => {
     }
   };
 
+
+
   const removeImage = async () => {
     try {
-      const response = await deleteProfileImage().unwrap();
-      console.log(response, 'response');
-      
-      const { profileImage } = response;
+      await deleteProfileImage().unwrap();
 
-      const updatedUserInfo = { ...userInfo, profileImage };
-      console.log(updatedUserInfo, 'updatedUserInfo');
+      const updatedUserInfo = { ...userInfo, profileImage:"" };
       
       localStorage.setItem("userInfo", JSON.stringify(updatedUserInfo));
       
-      dispatch(setCredentials(response));
-      setPreviewImage("");
-
+      dispatch(setCredentials(updatedUserInfo));
+      setPreviewImage(default_image);
+      handleProfileImageModalClose();
     } catch (error) {
       console.log(error);
-      
     }
   };
+  
 
   return (
     <div className="flex flex-col justify-center items-center">

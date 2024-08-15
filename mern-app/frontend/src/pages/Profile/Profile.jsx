@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { RiEdit2Line } from "react-icons/ri";
 import { FaPlus } from "react-icons/fa6";
 import Header from "../../Components/Header/Header";
@@ -8,18 +8,19 @@ import UpdatePassword from "../../Components/updates/UpdatePassword/UpdatePasswo
 import ProfileImage from "../../Components/updates/ProfileImage/ProfileImage";
 import { useGetUserQuery } from "../../features/user/usersApiSlice";
 import { useSelector } from "react-redux";
-
+import default_image from "../../assets/profile-icon.png";
 
 const Profile = () => {
   const { userInfo } = useSelector((state) => state.auth);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
   const [isProfileImageModalOpen, setIsProfileImageModalOpen] = useState(false);
-
+  const [profileImage, setProfileImage] = useState(default_image);
+  console.log(userInfo, 'userInfo');
+  console.log(profileImage, 'profileimage');
+  
   // Fetch user data
   const { data } = useGetUserQuery();
-  
-  
 
   const handleProfileModalOpen = () => setIsProfileModalOpen(true);
   const handleProfileModalClose = () => setIsProfileModalOpen(false);
@@ -27,7 +28,16 @@ const Profile = () => {
   const handlePasswordModalClose = () => setIsPasswordModalOpen(false);
   const handleProfileImageModalOpen = () => setIsProfileImageModalOpen(true);
   const handleProfileImageModalClose = () => setIsProfileImageModalOpen(false);
-  
+
+
+  useEffect(() =>{    
+    if(userInfo && userInfo.profileImage){
+      setProfileImage(`http://localhost:5000/userProfile/${userInfo.profileImage}`);
+    } else {
+        setProfileImage(default_image);
+    }
+  }, [userInfo])
+
   return (
     <div className="h-screen overflow-hidden">
       <Header />
@@ -39,7 +49,7 @@ const Profile = () => {
                 <div className="flex justify-center">
                   <div className="bg-blue-400 rounded-full w-24 h-24 relative">
                     <img
-                      src={`http://localhost:5000/userProfile/${userInfo.profileImage}`}
+                      src={profileImage}
                       alt="profile-image"
                       className="w-24 h-24 rounded-full"
                     />

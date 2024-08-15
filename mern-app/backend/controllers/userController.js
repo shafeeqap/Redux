@@ -173,28 +173,6 @@ const uploadProfileImage = asyncHandler(async (req, res) => {
   });
 });
 
-// @desc     Get profile image
-// route     GET /api/users/profileImage
-// @access   Private
-// const getProfileImage = asyncHandler(async (req, res) => {
-//   console.log(req.params.id, "params.id");
-//   if (req.params.id) {
-//     const image = await User.findById(req.params.id);
-//     console.log(image, "image");
-//     if (!image) {
-//       return res.status(404).json({ error: "Image not found" });
-//     }
-//     const imageData = image.data.toString("base64");
-
-//     res.json({
-//       message: "Image fetched successfully",
-//       data: imageData,
-//       contentType: image.contentType,
-//     });
-//   } else {
-//     return res.status(404).json({ message: "User not found" });
-//   }
-// });
 
 // @desc     Delete profile image
 // route     DELETE /api/users/profileImage
@@ -207,7 +185,7 @@ const deleteProfileImage = asyncHandler(async(req, res) =>{
     res.status(404).json({ message:"User not found"});
   }
 
-  const imagePath = path.join(__dirname, "../public/userProfile");
+  const imagePath = path.join(__dirname, "../public/userProfile", user.profileImage);
 
   // Remove the image file from the server
   if(fs.existsSync(imagePath)){
@@ -215,9 +193,18 @@ const deleteProfileImage = asyncHandler(async(req, res) =>{
   }
 
   user.profileImage = "";
-  await user.save();
+  const updatedUser = await user.save();
 
-})
+  res.status(200).json({ 
+    _id: updatedUser._id,
+    firstName: updatedUser.firstName,
+    lastName: updatedUser.lastName,
+    email: updatedUser.email,
+    mobile: updatedUser.mobile,
+    profileImage: updatedUser.profileImage,
+    message: "Profile image deleted successfully" });
+});
+
 export {
   authUser,
   registerUser,
@@ -226,6 +213,5 @@ export {
   updateUserProfile,
   updatePassword,
   uploadProfileImage,
-  // getProfileImage,
   deleteProfileImage,
 };

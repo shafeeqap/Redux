@@ -43,13 +43,6 @@ export const userApiSlice = apiSlice.injectEndpoints({
         body: data,
       })
     }),
-    // getProfileImage: builder.query({
-    //   query: (id) => ({
-    //     url: `${USERS_URL}/profileImage/${id}`,
-        // method: 'GET',
-        // body: id,
-    //   })
-    // }),
     updatePassword: builder.mutation({
       query: (data) => ({
         url: `${USERS_URL}/updatePassword`,
