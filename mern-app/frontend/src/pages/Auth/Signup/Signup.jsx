@@ -1,16 +1,17 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { PiEyeThin, PiEyeSlashThin } from "react-icons/pi";
 import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
-import { signupValidation } from "../../../validation/yupSignupValidation";
+import { signupValidation } from "../../../utils/validation/yupSignupValidation.js";
 import { IoLockClosedOutline } from "react-icons/io5";
 import { TfiEmail } from "react-icons/tfi";
 import { FiUser } from "react-icons/fi";
+import { FcGoogle } from "react-icons/fc";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useRegisterMutation } from "../../../features/user/usersApiSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { setCredentials } from "../../../features/user/authSlice";
+import { setCredentials } from "../../../features/auth/authSlice.js";
 import Loader from "../../../Components/Loader/Loader";
 
 const initialValues = {
@@ -34,7 +35,8 @@ const Signup = () => {
     }
   }, [navigate, userInfo]);
 
-  const { values, handleChange, handleSubmit, handleBlur, errors, touched } = useFormik({
+  const { values, handleChange, handleSubmit, handleBlur, errors, touched } =
+    useFormik({
       initialValues: initialValues,
       validationSchema: signupValidation,
       onSubmit: async (values) => {
@@ -46,7 +48,7 @@ const Signup = () => {
           });
           console.log(res);
           // update the Redux store with the new user credentials.
-          dispatch(setCredentials({ ...res })); 
+          dispatch(setCredentials({ ...res }));
           navigate("/login");
         } catch (error) {
           toast.error(
@@ -57,7 +59,7 @@ const Signup = () => {
     });
 
   return (
-    <div className="flex justify-center items-center h-screen bg-black/65 text-white">
+    <div className="flex justify-center items-center py-5 min-h-screen bg-black/65 text-white">
       <div className="bg-black/10 w-1/4 rounded-3xl">
         <div className="bg-black/20 text-center p-5 rounded-t-3xl">
           <h2 className="uppercase">user signup</h2>
@@ -161,9 +163,9 @@ const Signup = () => {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="bg-black/20 uppercase p-2 text-sm max-w-sm rounded-md sm:text-base sm:p-3 md:p-2 lg:w-32 hover:bg-black/30 hover:text-gray-300"
+                className="bg-black/20 uppercase p-2 text-sm max-w-sm rounded-md sm:text-base sm:p-3 md:p-2 lg:w-full hover:bg-black/30 hover:text-gray-300"
               >
-                {isLoading ? <Loader /> : 'signup'}
+                {isLoading ? <Loader /> : "signup"}
               </button>
             </div>
             <div className="text-center text-sm pb-5">
@@ -175,6 +177,21 @@ const Signup = () => {
               </p>
             </div>
           </form>
+          <div className="text-center mb-5">
+            <div className="flex justify-between items-center w-full">
+              <div className="border-t border-gray-300 w-1/2"></div>
+              <p className="px-3 text-gray-50">Or</p>
+              <div className="border-t border-gray-300 w-1/2"></div>
+            </div>
+            <div className="mt-3 border border-gray-300 rounded-md">
+              <div className="flex justify-between items-center px-5 p-1 cursor-pointer">
+                <FcGoogle />
+                <div className="w-full">
+                <p className="">Login with Google</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <ToastContainer />

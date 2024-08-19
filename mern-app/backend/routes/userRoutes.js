@@ -8,9 +8,14 @@ import {
   updatePassword,
   uploadProfileImage,
   deleteProfileImage,
+  forgotPassword,
+  resetPassword,
+  resendOtp,
+  verifyOTP,
 } from "../controllers/userController.js";
 import { protect } from "../middlewares/authMiddleware.js";
 import { upload } from "../middlewares/fileUploadMiddleware.js";
+
 
 const userRouter = express.Router();
 
@@ -21,6 +26,9 @@ userRouter.route("/profile").get(protect, getUserProfile).put(protect, updateUse
 userRouter.put("/updatePassword", protect, updatePassword);
 userRouter.post("/profileImage", upload.single('profileImage'), protect, uploadProfileImage);
 userRouter.delete("/profileImage", protect, deleteProfileImage);
-
+userRouter.post("/forgotPassword", forgotPassword);
+userRouter.post("/resetPassword", resetPassword);
+userRouter.post("/verifyOTP", verifyOTP);
+userRouter.post("/resendOtp", resendOtp);
 
 export default userRouter;

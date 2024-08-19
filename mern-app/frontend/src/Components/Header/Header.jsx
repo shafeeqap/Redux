@@ -5,7 +5,7 @@ import { RxHamburgerMenu } from "react-icons/rx";
 import { useSelector } from "react-redux";
 import Dropdown from "../Dropdown/Dropdown";
 import { useLogoutMutation } from "../../features/user/usersApiSlice.js";
-import { logout } from "../../features/user/authSlice.js";
+import { logout } from "../../features/auth/authSlice.js";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -18,7 +18,7 @@ const Header = () => {
       <nav>
         <div className="flex justify-between px-5 text-white">
           <div className="font-bold text-lg uppercase">
-            h<span className="text-yellow-700">o</span>riz<span className="text-yellow-700">o</span>n
+            u<span className="text-yellow-700">m</span>s
           </div>
           <div className="hidden md:flex justify-between items-center">
             {userInfo ? (

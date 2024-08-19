@@ -33,15 +33,15 @@ export const userApiSlice = apiSlice.injectEndpoints({
     getUser: builder.query({
       query: () => ({
         url: `${USERS_URL}/profile`,
-        method: 'GET',
-      })
+        method: "GET",
+      }),
     }),
     uploadProfileImage: builder.mutation({
       query: (data) => ({
         url: `${USERS_URL}/profileImage`,
         method: "POST",
         body: data,
-      })
+      }),
     }),
     updatePassword: builder.mutation({
       query: (data) => ({
@@ -51,10 +51,38 @@ export const userApiSlice = apiSlice.injectEndpoints({
       }),
     }),
     deleteProfileImage: builder.mutation({
-      query: () =>({
-        url:`${USERS_URL}/profileImage`,
+      query: () => ({
+        url: `${USERS_URL}/profileImage`,
         method: "DELETE",
       }),
+    }),
+    forgotPassword: builder.mutation({
+      query: (email) => ({
+        url: `${USERS_URL}/forgotPassword`,
+        method: "POST",
+        body: email,
+      }),
+    }),
+    verifyOTP: builder.mutation({
+      query: ({email, otp}) =>({
+        url: `${USERS_URL}/verifyOTP`,
+        method: "POST",
+        body: {email, otp},
+      })
+    }),
+    resetPassword: builder.mutation({
+      query: ({ email, newPassword }) => ({
+        url: `${USERS_URL}/resetPassword`,
+        method: "POST",
+        body: { email, newPassword },
+      }),
+    }),
+    resendOtp: builder.mutation({
+      query: (email) =>({
+        url: `${USERS_URL}/resendOtp`,
+        method: "POST",
+        body: email,
+      })
     }),
   }),
 });
@@ -67,6 +95,9 @@ export const {
   useUpdatePasswordMutation,
   useUploadProfileImageMutation,
   useGetUserQuery,
-  // useGetProfileImageQuery,
   useDeleteProfileImageMutation,
+  useForgotPasswordMutation,
+  useResetPasswordMutation,
+  useVerifyOTPMutation,
+  useResendOtpMutation,
 } = userApiSlice;

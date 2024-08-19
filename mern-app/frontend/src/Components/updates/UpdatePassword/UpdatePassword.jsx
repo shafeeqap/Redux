@@ -1,14 +1,14 @@
 import { useState } from 'react'
 import { useFormik } from "formik";
 import { IoLockClosedOutline } from "react-icons/io5";
-import { updatePasswordValidation } from '../../../validation/updatePasswordValidation.js';
+import { updatePasswordValidation } from '../../../utils/validation/updatePasswordValidation.js';
 import { PiEyeThin, PiEyeSlashThin } from "react-icons/pi";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useUpdatePasswordMutation } from '../../../features/user/usersApiSlice.js';
-import { setCredentials } from '../../../features/user/authSlice.js';
+import { setCredentials } from '../../../features/auth/authSlice.js';
 import { useDispatch } from 'react-redux';
-
+import Loader from '../../Loader/Loader.jsx';
 
 const UpdatePassword = ({handlePasswordModalClose}) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -106,7 +106,7 @@ const UpdatePassword = ({handlePasswordModalClose}) => {
             disabled={isLoading}
             className="bg-black/20 uppercase p-2 text-sm max-w-sm rounded-md sm:text-base sm:p-3 md:p-2 lg:w-full hover:bg-black/30 hover:text-gray-800"
           >
-            {isLoading ? "Updating..." : "Update Password"}
+            {isLoading ? <Loader /> : "Update Password"}
           </button>
         </div>
       </form>

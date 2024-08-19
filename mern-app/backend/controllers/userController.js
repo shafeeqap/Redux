@@ -1,9 +1,11 @@
 import asyncHandler from "express-async-handler";
 import User from "../models/users.js";
 import generateToken from "../utils/generateToken.js";
-import path from 'path';
-import fs from 'fs';
-import { fileURLToPath } from "url"; 
+import path from "path";
+import fs from "fs";
+import { fileURLToPath } from "url";
+import { sendEmail } from "../utils/sendEmail.js";
+import { generateOTP } from "../utils/generateOTP.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -23,6 +25,7 @@ const authUser = asyncHandler(async (req, res) => {
       lastName: user.lastName,
       email: user.email,
       mobile: user.mobile,
+      profileImage: user.profileImage,
     });
   } else {
     res.status(400);
@@ -59,7 +62,6 @@ const registerUser = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error("Invalid user data");
   }
-  res.status(200).json({ message: "Register  User", user: req.body });
 });
 
 // @desc     Logout user
@@ -173,36 +175,142 @@ const uploadProfileImage = asyncHandler(async (req, res) => {
   });
 });
 
-
 // @desc     Delete profile image
 // route     DELETE /api/users/profileImage
 // @access   Private
-const deleteProfileImage = asyncHandler(async(req, res) =>{
+const deleteProfileImage = asyncHandler(async (req, res) => {
   const userId = req.user._id;
   const user = await User.findById(userId);
 
-  if(!user){
-    res.status(404).json({ message:"User not found"});
+  if (!user) {
+    res.status(404).json({ message: "User not found" });
   }
 
-  const imagePath = path.join(__dirname, "../public/userProfile", user.profileImage);
+  const imagePath = path.join(
+    __dirname,
+    "../public/userProfile",
+    user.profileImage
+  );
 
   // Remove the image file from the server
-  if(fs.existsSync(imagePath)){
+  if (fs.existsSync(imagePath)) {
     fs.unlinkSync(imagePath);
   }
 
   user.profileImage = "";
   const updatedUser = await user.save();
 
-  res.status(200).json({ 
+  res.status(200).json({
     _id: updatedUser._id,
     firstName: updatedUser.firstName,
     lastName: updatedUser.lastName,
     email: updatedUser.email,
     mobile: updatedUser.mobile,
     profileImage: updatedUser.profileImage,
-    message: "Profile image deleted successfully" });
+    message: "Profile image deleted successfully",
+  });
+});
+
+// @desc     Forgot Password
+// route     POST /api/users/forgotPassword
+// @access   Public
+const forgotPassword = asyncHandler(async (req, res) => {
+  const { email } = req.body;
+
+  const user = await User.findOne({ email });
+  if (!user) {
+    return res.status(404).json({ message: "User not found" });
+  }
+
+  // Generate OTP (6-digit number)
+  const otp = await generateOTP(user);
+  console.log(otp, "otp");
+
+  const resetPasswordLink = `${process.env.FRONTEND_URL}/reset-password?email=${user.email}`;
+  
+  const message = `<p>Your OTP for password reset is: 
+  <strong style="font-size: 20px">${otp}</strong>. 
+  This OTP is valid for 5 minutes.</p>`;
+
+  await sendEmail({
+    to: user.email,
+    subject: "Password Reset OTP",
+    html: message,
+  });
+
+  res.status(200).json({ message: "OTP sent to your email" });
+});
+
+// @desc     Verify OTP
+// route     POST /api/users/verifyOTP
+// @access   Public
+const verifyOTP = asyncHandler(async (req, res) => {
+  const {email, otp } = req.body;
+  console.log(email, otp,  'emailm, otp');
+  
+  const user = await User.findOne({
+    otp,
+    otpExpire: { $gt: Date.now() },
+  });
+
+  if (!user) {
+    return res.status(400).json({ message: "Invalid OTP or OTP has expired" });
+  }
+
+  user.otp = undefined;
+  user.otpExpire = undefined;
+  await user.save();
+
+  res.status(200).json({ message: "OTP successfully verified" });
+});
+
+
+// @desc     Reset Password
+// route     POST /api/users/resetPassword
+// @access   Public
+const resetPassword = asyncHandler(async (req, res) => {
+  const { email, newPassword } = req.body;
+
+  const user = await User.findOne({
+    email,
+    otp,
+    otpExpire: { $gt: Date.now() },
+  });
+
+  if (!user) {
+    return res.status(400).json({ message: "User not found" });
+  }
+
+  user.password = newPassword;
+  await user.save();
+
+  res.status(200).json({ message: "Password reset successful" });
+});
+
+// @desc     Re-send OTP
+// route     POST /api/users/resendOtp
+// @access   Public
+const resendOtp = asyncHandler(async (req, res) => {
+  const { email } = req.body;
+
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    res.status(404).json({ message: "User not found" });
+  }
+
+  const otp = await generateOTP(user);
+  console.log(otp, "resend otp");
+
+  const message = `<p>Your new OTP for password reset is: <strong style="font-size: 20px">${otp}</strong>. This OTP is valid for 5 minutes.</p>`;
+
+  await sendEmail({
+    to: user.email,
+    subject: "Resend Password Reset OTP",
+    html: message,
+  });
+
+  res.status(200).json({ message: "OTP resent to your email" });
 });
 
 export {
@@ -214,4 +322,8 @@ export {
   updatePassword,
   uploadProfileImage,
   deleteProfileImage,
+  forgotPassword,
+  verifyOTP,
+  resendOtp,
+  resetPassword,
 };

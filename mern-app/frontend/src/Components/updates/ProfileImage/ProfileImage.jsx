@@ -3,7 +3,7 @@ import { useUploadProfileImageMutation, useDeleteProfileImageMutation } from "..
 import { IoSave } from "react-icons/io5";
 import { FaTrashCan } from "react-icons/fa6";
 import { useDispatch, useSelector } from "react-redux";
-import { setCredentials } from "../../../features/user/authSlice";
+import { setCredentials } from "../../../features/auth/authSlice";
 import default_image from "../../../assets/profile-icon.png";
 
 

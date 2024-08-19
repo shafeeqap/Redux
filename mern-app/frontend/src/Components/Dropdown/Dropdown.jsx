@@ -3,7 +3,7 @@ import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { useLogoutMutation } from '../../features/user/usersApiSlice';
-import { logout } from '../../features/user/authSlice';
+import { logout } from '../../features/auth/authSlice';
 
 const Dropdown = () => {
   const { userInfo } = useSelector((state) => state.auth);

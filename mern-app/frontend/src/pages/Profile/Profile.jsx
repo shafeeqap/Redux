@@ -7,36 +7,61 @@ import UpdateProfile from "../../Components/updates/UpadateProfile/UpdateProfile
 import UpdatePassword from "../../Components/updates/UpdatePassword/UpdatePassword";
 import ProfileImage from "../../Components/updates/ProfileImage/ProfileImage";
 import { useGetUserQuery } from "../../features/user/usersApiSlice";
-import { useSelector } from "react-redux";
+import {
+  openProfileModal,
+  closeProfileModal,
+  openPasswordModal,
+  closePasswordModal,
+  openProfileImageModal,
+  closeProfileImageModal,
+} from "../../features/modal/modalSlice";
+import { useDispatch, useSelector } from "react-redux";
 import default_image from "../../assets/profile-icon.png";
+import { MdOutlineLockReset } from "react-icons/md";
 
 const Profile = () => {
   const { userInfo } = useSelector((state) => state.auth);
-  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
-  const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
-  const [isProfileImageModalOpen, setIsProfileImageModalOpen] = useState(false);
+  const { isProfileModalOpen, isPasswordModalOpen, isProfileImageModalOpen } = useSelector((state) => state.modal);
   const [profileImage, setProfileImage] = useState(default_image);
-  console.log(userInfo, 'userInfo');
-  console.log(profileImage, 'profileimage');
-  
+  const dispatch = useDispatch();
+
   // Fetch user data
-  const { data } = useGetUserQuery();
+  const { data, refetch } = useGetUserQuery();
 
-  const handleProfileModalOpen = () => setIsProfileModalOpen(true);
-  const handleProfileModalClose = () => setIsProfileModalOpen(false);
-  const handlePasswordModalOpen = () => setIsPasswordModalOpen(true);
-  const handlePasswordModalClose = () => setIsPasswordModalOpen(false);
-  const handleProfileImageModalOpen = () => setIsProfileImageModalOpen(true);
-  const handleProfileImageModalClose = () => setIsProfileImageModalOpen(false);
+  const handleProfileModalOpen = () => {
+    dispatch(openProfileModal());
+  };
 
+  const handleProfileModalClose = () => {
+    dispatch(closeProfileModal());
+    refetch();
+  };
 
-  useEffect(() =>{    
-    if(userInfo && userInfo.profileImage){
-      setProfileImage(`http://localhost:5000/userProfile/${userInfo.profileImage}`);
+  const handlePasswordModalOpen = () => {
+    dispatch(openPasswordModal());
+  };
+
+  const handlePasswordModalClose = () => {
+    dispatch(closePasswordModal());
+  };
+
+  const handleProfileImageModalOpen = () => {
+    dispatch(openProfileImageModal());
+  };
+
+  const handleProfileImageModalClose = () => {
+    dispatch(closeProfileImageModal());
+  };
+
+  useEffect(() => {
+    if (userInfo && userInfo.profileImage) {
+      setProfileImage(
+        `http://localhost:5000/userProfile/${userInfo.profileImage}`
+      );
     } else {
-        setProfileImage(default_image);
+      setProfileImage(default_image);
     }
-  }, [userInfo])
+  }, [userInfo]);
 
   return (
     <div className="h-screen overflow-hidden">
@@ -70,7 +95,7 @@ const Profile = () => {
             </div>
             <div className="w-full flex max-sm:m-5 p-5">
               <div className="w-full mt-5">
-                <h1 className="font-semibold text-xl">My Profile</h1>
+                <h1 className="font-bold text-xl uppercase">My Profile</h1>
                 <div className="grid lg:grid-cols-2 md:grid-cols-1 sm:grid-cols-1 mt-4 border rounded relative">
                   <div
                     onClick={handleProfileModalOpen}
@@ -129,8 +154,9 @@ const Profile = () => {
                     className="flex items-center"
                   >
                     <div className="flex items-center gap-2 cursor-pointer">
-                      <h1>change password</h1>
-                      <RiEdit2Line />
+                      <MdOutlineLockReset className="text-gray-400 text-2xl" />
+                      <h1 className="uppercase font-bold">change password</h1>
+                      {/* <RiEdit2Line /> */}
                     </div>
                   </div>
                 </div>

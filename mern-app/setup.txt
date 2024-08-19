@@ -38,3 +38,11 @@ Frontend
 
 npm install -D concurrently :- for start both frontend and Backend
 npm start dev
+
+============  To remove directories and files in PowerShell ====================
+Remove-Item -Recurse -Force node_modules
+Remove-Item -Force package-lock.json
+
+# you can reinstall your dependencies with: npm install
+
+

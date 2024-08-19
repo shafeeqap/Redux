@@ -18,7 +18,7 @@ const Modal = ({ isOpen, onClose, title, children }) => {
         <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
           <div onClick={onClose} className="flex justify-end">
             <div className="rounded-full hover:bg-slate-200 p-1">
-              <MdClose className="text-2xl cursor-pointer" />
+              <MdClose className="text-black text-2xl cursor-pointer" />
             </div>
           </div>
           <div className="sm:flex sm:items-start">

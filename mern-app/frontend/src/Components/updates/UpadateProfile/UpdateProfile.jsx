@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useFormik } from "formik";
-import { updateProfileValidation } from "../../../validation/updateProfileValidation.js";
+import { updateProfileValidation } from "../../../utils/validation/updateProfileValidation.js";
 import { TfiEmail } from "react-icons/tfi";
 import { FiUser } from "react-icons/fi";
 import { FiSmartphone } from "react-icons/fi";
@@ -8,7 +8,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useUpdateUserMutation } from "../../../features/user/usersApiSlice.js";
 import { useDispatch, useSelector } from "react-redux";
-import { setCredentials } from "../../../features/user/authSlice.js";
+import { setCredentials } from "../../../features/auth/authSlice.js";
 import Loader from "../../Loader/Loader.jsx";
 
 const UpdateProfile = ( {handleProfileModalClose} ) => {

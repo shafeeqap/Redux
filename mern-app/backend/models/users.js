@@ -26,6 +26,12 @@ const userSchema = new mongoose.Schema({
     profileImage: {
         type: String,
         // required: false
+    },
+    otp: {
+        type: String,
+    },
+    otpExpire: {
+        type: Date,
     }
 },{
     timestamps: true
