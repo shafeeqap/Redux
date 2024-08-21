@@ -144,7 +144,7 @@ const Login = () => {
           <div className="text-center py-5">
             <div className="flex justify-between items-center w-full">
               <div className="border-t border-gray-300 w-1/2"></div>
-              <p className="px-3 text-gray-50">Or</p>
+              <p className="px-3 text-gray-50">OR</p>
               <div className="border-t border-gray-300 w-1/2"></div>
             </div>
             <div className="mt-3 border border-gray-300 rounded-md">

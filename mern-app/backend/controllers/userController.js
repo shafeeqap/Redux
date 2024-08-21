@@ -223,53 +223,31 @@ const forgotPassword = asyncHandler(async (req, res) => {
   }
 
   // Generate OTP (6-digit number)
-  const otp = await generateOTP(user);
+  const { otp, otpExpire } = await generateOTP(user);
   console.log(otp, "otp");
 
-  const resetPasswordLink = `${process.env.FRONTEND_URL}/reset-password?email=${user.email}`;
-  
   const message = `<p>Your OTP for password reset is: 
   <strong style="font-size: 20px">${otp}</strong>. 
   This OTP is valid for 5 minutes.</p>`;
 
-  await sendEmail({
-    to: user.email,
-    subject: "Password Reset OTP",
-    html: message,
-  });
-
-  res.status(200).json({ message: "OTP sent to your email" });
+  try {
+    await sendEmail({
+      to: user.email,
+      subject: "Password Reset OTP",
+      html: message,
+    });
+    res.status(200).json({ message: "OTP sent to your email", otpExpire });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to send OTP email" });
+  }
 });
 
 // @desc     Verify OTP
 // route     POST /api/users/verifyOTP
 // @access   Public
 const verifyOTP = asyncHandler(async (req, res) => {
-  const {email, otp } = req.body;
-  console.log(email, otp,  'emailm, otp');
-  
-  const user = await User.findOne({
-    otp,
-    otpExpire: { $gt: Date.now() },
-  });
-
-  if (!user) {
-    return res.status(400).json({ message: "Invalid OTP or OTP has expired" });
-  }
-
-  user.otp = undefined;
-  user.otpExpire = undefined;
-  await user.save();
-
-  res.status(200).json({ message: "OTP successfully verified" });
-});
-
-
-// @desc     Reset Password
-// route     POST /api/users/resetPassword
-// @access   Public
-const resetPassword = asyncHandler(async (req, res) => {
-  const { email, newPassword } = req.body;
+  const { email, otp } = req.body;
+  console.log(email, otp, "emailm, otp");
 
   const user = await User.findOne({
     email,
@@ -278,13 +256,14 @@ const resetPassword = asyncHandler(async (req, res) => {
   });
 
   if (!user) {
-    return res.status(400).json({ message: "User not found" });
+    return res.status(400).json({ message: "Invalid or expired OTP" });
   }
 
-  user.password = newPassword;
-  await user.save();
+  user.otp = undefined;
+  user.otpExpire = undefined;
+  const updated = await user.save();
 
-  res.status(200).json({ message: "Password reset successful" });
+  res.status(200).json({ message: "verified" });
 });
 
 // @desc     Re-send OTP
@@ -299,18 +278,42 @@ const resendOtp = asyncHandler(async (req, res) => {
     res.status(404).json({ message: "User not found" });
   }
 
-  const otp = await generateOTP(user);
+  const { otp, otpExpire} = await generateOTP(user);
   console.log(otp, "resend otp");
 
-  const message = `<p>Your new OTP for password reset is: <strong style="font-size: 20px">${otp}</strong>. This OTP is valid for 5 minutes.</p>`;
+  const message = `<p>Your new OTP for password reset is: 
+  <strong style="font-size: 20px">${otp}</strong>. 
+  This OTP is valid for 5 minutes.</p>`;
 
-  await sendEmail({
-    to: user.email,
-    subject: "Resend Password Reset OTP",
-    html: message,
-  });
+  try {
+    await sendEmail({
+      to: user.email,
+      subject: "Resend Password Reset OTP",
+      html: message,
+    });
+    res.status(200).json({ message: "OTP resent to your email", otpExpire });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to resend OTP email" });
+  }
+});
 
-  res.status(200).json({ message: "OTP resent to your email" });
+// @desc     Reset Password
+// route     POST /api/users/resetPassword
+// @access   Public
+const resetPassword = asyncHandler(async (req, res) => {
+  const { email, newPassword } = req.body;
+console.log(req.body, 'reset password');
+
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    return res.status(400).json({ message: "User not found" });
+  }
+
+  user.password = newPassword;
+  const updated = await user.save();
+
+  res.status(200).json({ message: "Password reset successful" });
 });
 
 export {

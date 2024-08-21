@@ -12,10 +12,11 @@ import crypto from "crypto";
 // });
 const generateOTP = async (user) => {
   const otp = crypto.randomInt(100000, 1000000).toString();
+  const otpExpire = Date.now() + 60000; // OTP valid for 5 minutes 300000  
   user.otp = otp;
-  user.otpExpire = Date.now() + 300000; // OTP valid for 5 minutes
+  user.otpExpire = otpExpire;
   await user.save();
-  return otp;
+  return { otp, otpExpire };
 };
 
 export { generateOTP };

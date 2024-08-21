@@ -27,8 +27,8 @@ userRouter.put("/updatePassword", protect, updatePassword);
 userRouter.post("/profileImage", upload.single('profileImage'), protect, uploadProfileImage);
 userRouter.delete("/profileImage", protect, deleteProfileImage);
 userRouter.post("/forgotPassword", forgotPassword);
-userRouter.post("/resetPassword", resetPassword);
 userRouter.post("/verifyOTP", verifyOTP);
+userRouter.post("/resetPassword", resetPassword);
 userRouter.post("/resendOtp", resendOtp);
 
 export default userRouter;

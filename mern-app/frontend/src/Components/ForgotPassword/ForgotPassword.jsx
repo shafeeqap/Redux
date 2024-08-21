@@ -9,8 +9,6 @@ import { useState } from "react";
 import VerifyOTP from "../verifyOTP/verifyOTP";
 
 
-
-
 const initialValues = {
   email: "",
 };
@@ -19,6 +17,7 @@ const ForgotPassword = () => {
   const [forgotPassword, { isLoading }] = useForgotPasswordMutation();
   const [otpSent, setOtpSent] = useState(false);
   const [email, setEmail] = useState("");
+  const [otpExpire, setOtpExpire] = useState();
 
   const { values, handleChange, handleBlur, handleSubmit, errors, touched } =
     useFormik({
@@ -32,6 +31,11 @@ const ForgotPassword = () => {
             error: "Email verification failed!",
           });
           console.log(res, "forgotpassword response");
+
+          if(res.otpExpire){
+            setOtpExpire(res.otpExpire)
+          }
+
           setEmail(values.email);
           setOtpSent(true);
         } catch (error) {
@@ -75,7 +79,7 @@ const ForgotPassword = () => {
           </div>
         </form>
       ) : (
-        <VerifyOTP email={email} />
+        <VerifyOTP email={email} otpExpire={otpExpire} />
       )}
 
       <ToastContainer />

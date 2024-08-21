@@ -9,11 +9,11 @@ const Modal = ({ isOpen, onClose, title, children }) => {
       aria-labelledby="modal-title"
       role="dialog"
       aria-modal="true"
-      onClick={onClose}
+      // onClick={onClose}
     >
       <div
         className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg"
-        onClick={(e) => e.stopPropagation()}
+        // onClick={(e) => e.stopPropagation()}
       >
         <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
           <div onClick={onClose} className="flex justify-end">
