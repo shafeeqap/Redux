@@ -172,7 +172,7 @@ const Signup = () => {
               <p>
                 You have already an account?{" "}
                 <Link to="/login">
-                  <span className="text-gray-400">Login</span>
+                  <span className="text-gray-400 hover:underline">Log in</span>
                 </Link>
               </p>
             </div>
@@ -187,14 +187,14 @@ const Signup = () => {
               <div className="flex justify-between items-center px-5 p-1 cursor-pointer">
                 <FcGoogle />
                 <div className="w-full">
-                <p className="">Login with Google</p>
+                <p className="font-serif">Log in with Google</p>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <ToastContainer />
+      {/* <ToastContainer /> */}
     </div>
   );
 };

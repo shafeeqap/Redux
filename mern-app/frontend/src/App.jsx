@@ -5,6 +5,8 @@ import Home from "./pages/Home/Home";
 import "react-toastify/dist/ReactToastify.css";
 import Profile from "./pages/Profile/Profile";
 import PrivateRoute from "./Components/Private/PrivateRoute";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const App = () => {
   return (
@@ -17,6 +19,7 @@ const App = () => {
           <Route path="/profile" element={<Profile />} />
         </Route>
       </Routes>
+        <ToastContainer />
     </>
   );
 };

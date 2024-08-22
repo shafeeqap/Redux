@@ -154,7 +154,7 @@ const UpdateProfile = ( {handleProfileModalClose} ) => {
           <button
             type="submit"
             disabled={!hasChanges(values)}
-            className="bg-black/20 uppercase p-2 text-sm max-w-sm rounded-md sm:text-base sm:p-3 md:p-2 lg:w-full hover:bg-black/30 hover:text-gray-800 cursor-pointer"
+            className="bg-blue-500 text-white uppercase p-2 text-sm max-w-sm rounded-md sm:text-base sm:p-3 md:p-2 lg:w-full hover:bg-blue-600 hover:text-gray-200 cursor-pointer"
           >
             {isLoading ? <Loader /> : "update"}
           </button>

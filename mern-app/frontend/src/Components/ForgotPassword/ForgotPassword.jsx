@@ -2,12 +2,10 @@ import { TfiEmail } from "react-icons/tfi";
 import { useFormik } from "formik";
 import { forgotPasswordValidation } from "../../utils/validation/forgotPasswordValidation";
 import { useForgotPasswordMutation } from "../../features/user/usersApiSlice";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 import Loader from "../../Components/Loader/Loader";
 import { useState } from "react";
 import VerifyOTP from "../verifyOTP/verifyOTP";
-
 
 const initialValues = {
   email: "",
@@ -25,24 +23,19 @@ const ForgotPassword = () => {
       validationSchema: forgotPasswordValidation,
       onSubmit: async (values) => {
         try {
-          const res = await toast.promise(forgotPassword(values).unwrap(), {
-            pending: "Verifying email...",
-            success: "OTP send success!",
-            error: "Email verification failed!",
-          });
+          const res = await forgotPassword(values).unwrap();
           console.log(res, "forgotpassword response");
+          toast.success(res.message);
 
-          if(res.otpExpire){
-            setOtpExpire(res.otpExpire)
+          if (res.otpExpire) {
+            setOtpExpire(res.otpExpire);
           }
 
           setEmail(values.email);
           setOtpSent(true);
         } catch (error) {
           console.log(error?.data?.message || error.error);
-          toast.error(
-            error?.data?.message || "An error occurred during login."
-          );
+          toast.error(error?.data?.message);
         }
       },
     });
@@ -69,20 +62,19 @@ const ForgotPassword = () => {
             )}
           </div>
           <div className="py-5 text-center">
+            <div className="flex justify-center">{isLoading && <Loader />}</div>
             <button
               type="submit"
               disabled={isLoading}
               className="bg-blue-500 uppercase p-2 text-sm max-w-sm rounded-md sm:text-base sm:p-3 md:p-2 lg:w-full hover:bg-blue-600 hover:text-gray-200"
             >
-              {isLoading ? <Loader /> : "verify email"}
+              verify email
             </button>
           </div>
         </form>
       ) : (
         <VerifyOTP email={email} otpExpire={otpExpire} />
       )}
-
-      <ToastContainer />
     </div>
   );
 };

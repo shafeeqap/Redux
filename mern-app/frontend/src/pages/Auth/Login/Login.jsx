@@ -7,11 +7,13 @@ import { useFormik } from "formik";
 import { loginValidation } from "../../../utils/validation/yupLoginValidation.js";
 import { TfiEmail } from "react-icons/tfi";
 import { useLoginMutation } from "../../../features/user/usersApiSlice.js";
-import { openForgotPasswordModal, closeForgotPasswordModal } from "../../../features/modal/modalSlice.js";
+import {
+  openForgotPasswordModal,
+  closeForgotPasswordModal,
+} from "../../../features/modal/modalSlice.js";
 import { useDispatch, useSelector } from "react-redux";
 import { setCredentials } from "../../../features/auth/authSlice.js";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 import Loader from "../../../Components/Loader/Loader.jsx";
 import Modal from "../../../Components/modal/Modal.jsx";
 import ForgotPassword from "../../../Components/forgotPassword/ForgotPassword.jsx";
@@ -58,13 +60,13 @@ const Login = () => {
       },
     });
 
-    const handleForgotPasswordOpen = () => {
-      dispatch(openForgotPasswordModal());
-    };
+  const handleForgotPasswordOpen = () => {
+    dispatch(openForgotPasswordModal());
+  };
 
-    const handlForgotPsswordClose = () => {
-      dispatch(closeForgotPasswordModal());
-    }
+  const handlForgotPsswordClose = () => {
+    dispatch(closeForgotPasswordModal());
+  };
 
   return (
     <div className="flex justify-center items-center h-screen bg-black/65 text-white">
@@ -113,10 +115,17 @@ const Login = () => {
                 <IoLockClosedOutline />
               </div>
               <div className="flex flex-row-reverse justify-between">
-                <small onClick={handleForgotPasswordOpen} className="cursor-pointer texbl hover:text-gray-300">Forgot password?</small>
+                <small
+                  onClick={handleForgotPasswordOpen}
+                  className="cursor-pointer texbl hover:text-gray-300"
+                >
+                  Forgot password?
+                </small>
                 <div className="flex gap-1">
                   <input type="checkbox" />
-                  <label className="text-sm" htmlFor="checkbox">Remember me</label>
+                  <label className="text-sm" htmlFor="checkbox">
+                    Remember me
+                  </label>
                 </div>
               </div>
               {errors.password && touched.password && (
@@ -134,9 +143,9 @@ const Login = () => {
             </div>
             <div className="text-center text-sm">
               <p>
-                You don't have account?{" "}
+                You don’t have an account?{" "}
                 <Link to="/signup">
-                  <span className="text-gray-400">Sign up</span>
+                  <span className="text-gray-400 hover:underline">Sign up</span>
                 </Link>
               </p>
             </div>
@@ -151,17 +160,20 @@ const Login = () => {
               <div className="flex justify-between items-center px-5 p-1 cursor-pointer">
                 <FcGoogle />
                 <div className="w-full">
-                <p className="">Login with Google</p>
+                  <p className="font-serif">Log in with Google</p>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <Modal isOpen={isForgotPasswordModalOpen} onClose={handlForgotPsswordClose} title={"Forgot Password"}>
+      <Modal
+        isOpen={isForgotPasswordModalOpen}
+        onClose={handlForgotPsswordClose}
+        title={"Forgot Password"}
+      >
         <ForgotPassword />
       </Modal>
-      <ToastContainer />
     </div>
   );
 };

@@ -4,18 +4,15 @@ import { PiEyeThin, PiEyeSlashThin } from "react-icons/pi";
 import { useFormik } from "formik";
 import { useResetPasswordMutation } from "../../features/user/usersApiSlice";
 import { resetPasswordValidation } from "../../utils/validation/resetPasswordValidation.js";
-import { closeForgotPasswordModal, closeResetPasswordModal } from "../../features/modal/modalSlice.js"
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { closeForgotPasswordModal } from "../../features/modal/modalSlice.js";
+import { toast } from "react-toastify";
 import Loader from "../../Components/Loader/Loader";
 import { useDispatch } from "react-redux";
-
 
 const ResetPassword = ({ email }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [resetPassword, { isLoading }] = useResetPasswordMutation();
   const dispatch = useDispatch();
-
 
   const formik = useFormik({
     initialValues: {
@@ -25,10 +22,12 @@ const ResetPassword = ({ email }) => {
     validationSchema: resetPasswordValidation,
     onSubmit: async (values) => {
       try {
-        const res = await resetPassword({ email, newPassword: values.password }).unwrap();
+        const res = await resetPassword({
+          email,
+          newPassword: values.password,
+        }).unwrap();
         console.log(res, "resetPassword response");
         toast.success("Password reset successfully!");
-        dispatch(closeResetPasswordModal());
         dispatch(closeForgotPasswordModal());
       } catch (error) {
         console.log(error?.data?.message || error.error);
@@ -81,15 +80,15 @@ const ResetPassword = ({ email }) => {
           )}
         </div>
         <div className="py-5 text-center">
+          {isLoading && <Loader />}
           <button
             type="submit"
             className="bg-blue-500 uppercase p-2 text-sm max-w-sm rounded-md sm:text-base sm:p-3 md:p-2 lg:w-full hover:bg-blue-600 hover:text-gray-200"
           >
-            {isLoading ? <Loader /> : "Reset Password"}
+            Reset Password
           </button>
         </div>
       </form>
-      <ToastContainer />
     </div>
   );
 };

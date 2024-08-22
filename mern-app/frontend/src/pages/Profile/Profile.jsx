@@ -64,13 +64,13 @@ const Profile = () => {
   }, [userInfo]);
 
   return (
-    <div className="h-screen overflow-hidden">
+    <div className="h-screen overflow-hidde">
       <Header />
-      <div className="bg-black/65 h-screen flex justify-center sm:px-10 overflow-hidden">
-        <div className="sm:w-1/2 bg-white flex-col justify-center py-5">
-          <div className="flex sm:flex-row h-[400px] gap-2 sm:p-4 min-w-fit">
-            <div className="w-1/2 flex-row justify-center">
-              <div className="w-full mt-10 max-sm:m-4">
+      <div className="bg-black/65 min-h-svh flex justify-center sm:px-10 overflow-hidden">
+        <div className="bg-white justify-center">
+          <div className="flex flex-col sm:p-4 min-w-fit">
+            <div className="flex-row justify-center items-center rounded-md bg-gray-300">
+              <div className="w-full p-5 max-sm:m-4">
                 <div className="flex justify-center">
                   <div className="bg-blue-400 rounded-full w-24 h-24 relative">
                     <img
@@ -162,10 +162,10 @@ const Profile = () => {
                 </div>
               </div>
             </div>
-          </div>
           <footer>
-            <div className="bg-gray-200 h-32 w-full"></div>
+            <div className="bg-gray-300 min-h-32 w-full rounded-md"></div>
           </footer>
+          </div>
         </div>
       </div>
       <Modal

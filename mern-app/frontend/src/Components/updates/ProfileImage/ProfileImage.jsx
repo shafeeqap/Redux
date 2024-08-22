@@ -98,7 +98,7 @@ const ProfileImage = ({ handleProfileImageModalClose }) => {
       <div className="w-full flex justify-between items-center">
         <button
           onClick={saveImage}
-          className="flex justify-center items-center gap-2 bg-blue-700 p-2 rounded-md min-w-28 text-white text-center cursor-pointer hover:bg-blue-800"
+          className="flex justify-center items-center gap-2 bg-blue-500 p-2 rounded-md min-w-28 text-white text-center cursor-pointer hover:bg-blue-600"
         >
           <IoSave />
           Save

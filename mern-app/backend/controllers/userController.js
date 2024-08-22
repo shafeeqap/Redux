@@ -186,11 +186,7 @@ const deleteProfileImage = asyncHandler(async (req, res) => {
     res.status(404).json({ message: "User not found" });
   }
 
-  const imagePath = path.join(
-    __dirname,
-    "../public/userProfile",
-    user.profileImage
-  );
+  const imagePath = path.join(__dirname, "../public/userProfile", user.profileImage);
 
   // Remove the image file from the server
   if (fs.existsSync(imagePath)) {
@@ -224,7 +220,6 @@ const forgotPassword = asyncHandler(async (req, res) => {
 
   // Generate OTP (6-digit number)
   const { otp, otpExpire } = await generateOTP(user);
-  console.log(otp, "otp");
 
   const message = `<p>Your OTP for password reset is: 
   <strong style="font-size: 20px">${otp}</strong>. 
@@ -247,7 +242,6 @@ const forgotPassword = asyncHandler(async (req, res) => {
 // @access   Public
 const verifyOTP = asyncHandler(async (req, res) => {
   const { email, otp } = req.body;
-  console.log(email, otp, "emailm, otp");
 
   const user = await User.findOne({
     email,
@@ -279,7 +273,6 @@ const resendOtp = asyncHandler(async (req, res) => {
   }
 
   const { otp, otpExpire} = await generateOTP(user);
-  console.log(otp, "resend otp");
 
   const message = `<p>Your new OTP for password reset is: 
   <strong style="font-size: 20px">${otp}</strong>. 
@@ -302,7 +295,6 @@ const resendOtp = asyncHandler(async (req, res) => {
 // @access   Public
 const resetPassword = asyncHandler(async (req, res) => {
   const { email, newPassword } = req.body;
-console.log(req.body, 'reset password');
 
   const user = await User.findOne({ email });
 
