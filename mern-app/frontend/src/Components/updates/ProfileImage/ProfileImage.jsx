@@ -72,7 +72,7 @@ const ProfileImage = ({ handleProfileImageModalClose }) => {
       
       dispatch(setCredentials(updatedUserInfo));
       setPreviewImage(default_image);
-      handleProfileImageModalClose();
+      // handleProfileImageModalClose();
     } catch (error) {
       console.log(error);
     }

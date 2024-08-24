@@ -64,15 +64,15 @@ const Profile = () => {
   }, [userInfo]);
 
   return (
-    <div className="h-screen overflow-hidde">
+    <div className="h-screen">
       <Header />
-      <div className="bg-black/65 min-h-svh flex justify-center sm:px-10 overflow-hidden">
+      <div className="bg-black/65 min-h-svh flex justify-center px-10 overflow-hidden">
         <div className="bg-white justify-center">
-          <div className="flex flex-col sm:p-4 min-w-fit">
+          <div className="flex flex-col p-4 min-w-fit">
             <div className="flex-row justify-center items-center rounded-md bg-gray-300">
-              <div className="w-full p-5 max-sm:m-4">
+              <div className="w-full p-5">
                 <div className="flex justify-center">
-                  <div className="bg-blue-400 rounded-full w-24 h-24 relative">
+                  <div className="rounded-full w-24 h-24 relative">
                     <img
                       src={profileImage}
                       alt="profile-image"
@@ -93,7 +93,7 @@ const Profile = () => {
                 </div>
               </div>
             </div>
-            <div className="w-full flex max-sm:m-5 p-5">
+            <div className="w-full flex p-5">
               <div className="w-full mt-5">
                 <h1 className="font-bold text-xl uppercase">My Profile</h1>
                 <div className="grid lg:grid-cols-2 md:grid-cols-1 sm:grid-cols-1 mt-4 border rounded relative">

@@ -17,6 +17,8 @@ import { toast } from "react-toastify";
 import Loader from "../../../Components/Loader/Loader.jsx";
 import Modal from "../../../Components/modal/Modal.jsx";
 import ForgotPassword from "../../../Components/forgotPassword/ForgotPassword.jsx";
+import CryptoJs from "crypto-js";
+import { handleRememberMe, saveCredentials } from "../../../utils/helpers/rememberMe.js";
 
 const initialValues = {
   email: "",
@@ -25,6 +27,7 @@ const initialValues = {
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [login, { isLoading }] = useLoginMutation();
@@ -32,33 +35,60 @@ const Login = () => {
   const { isForgotPasswordModalOpen } = useSelector((state) => state.modal);
 
   useEffect(() => {
+    const savedEmail = localStorage.getItem("email");
+    const savedPassword = localStorage.getItem("password");
+
+    if (savedEmail && savedPassword) {
+      const decryptedPassword = CryptoJs.AES.decrypt(savedPassword, "secret-key").toString(CryptoJs.enc.Utf8);
+      initialValues.email = savedEmail;
+      initialValues.password = decryptedPassword;
+      setRememberMe(true);
+    }
+  }, []);
+
+  useEffect(() => {
     if (userInfo) {
       navigate("/");
     }
   }, [navigate, userInfo]);
 
-  const { values, handleBlur, handleChange, handleSubmit, errors, touched } =
-    useFormik({
-      initialValues: initialValues,
-      validationSchema: loginValidation,
-      onSubmit: async (values) => {
-        try {
-          const res = await toast.promise(login(values).unwrap(), {
-            pending: "Logging in...",
-            success: "Logged in successfully!",
-            error: "Login failed!",
-          });
-          console.log(res);
-          dispatch(setCredentials({ ...res }));
-          navigate("/");
-        } catch (error) {
-          console.log(error?.data?.message || error.error);
-          toast.error(
-            error?.data?.message || "An error occurred during login."
-          );
-        }
-      },
-    });
+  const handleCheckboxChange = (e, setFieldValue) => {
+    const isChecked = e.target.checked;
+    setRememberMe(isChecked);
+
+    handleRememberMe(isChecked, setFieldValue);
+  };
+
+  const {
+    values,
+    handleBlur,
+    handleChange,
+    handleSubmit,
+    errors,
+    touched,
+    setFieldValue,
+  } = useFormik({
+    initialValues: initialValues,
+    validationSchema: loginValidation,
+    onSubmit: async (values) => {
+      try {
+        const res = await toast.promise(login(values).unwrap(), {
+          pending: "Logging in...",
+          success: "Logged in successfully!",
+          error: "Login failed!",
+        });
+
+        saveCredentials(rememberMe, values);
+
+        console.log(res);
+        dispatch(setCredentials({ ...res }));
+        navigate("/");
+      } catch (error) {
+        console.log(error?.data?.message || error.error);
+        toast.error(error?.data?.message || "An error occurred during login.");
+      }
+    },
+  });
 
   const handleForgotPasswordOpen = () => {
     dispatch(openForgotPasswordModal());
@@ -121,9 +151,14 @@ const Login = () => {
                 >
                   Forgot password?
                 </small>
-                <div className="flex gap-1">
-                  <input type="checkbox" />
-                  <label className="text-sm" htmlFor="checkbox">
+                <div className="flex gap-1 max-sm:hidden">
+                  <input
+                    type="checkbox"
+                    checked={rememberMe}
+                    onChange={(e) => handleCheckboxChange(e, setFieldValue)}
+                    id="rememberMe"
+                  />
+                  <label className="text-sm" htmlFor="rememberMe">
                     Remember me
                   </label>
                 </div>
@@ -133,12 +168,13 @@ const Login = () => {
               )}
             </div>
             <div className="py-5 text-center">
+              <div className="flex justify-center">{isLoading && (<Loader />)}</div>
               <button
                 type="submit"
                 disabled={isLoading}
                 className="bg-black/20 uppercase p-2 text-sm max-w-sm rounded-md sm:text-base sm:p-3 md:p-2 lg:w-full hover:bg-black/30 hover:text-gray-300"
               >
-                {isLoading ? <Loader /> : "Login"}
+                Login
               </button>
             </div>
             <div className="text-center text-sm">
