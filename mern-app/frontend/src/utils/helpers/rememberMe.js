@@ -1,8 +1,8 @@
 import CryptoJS from "crypto-js";
-import { useSelector } from "react-redux";
+// import { useSelector } from "react-redux";
 
 export const handleRememberMe = (isChecked, setFieldValue) => {
-    const { userInfo } = useSelector((state) => state.auth);
+    // const { userInfo } = useSelector((state) => state.auth);
     
   if (isChecked) {
     const savedEmail = localStorage.getItem("email");

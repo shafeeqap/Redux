@@ -4,7 +4,9 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 const Home = () => {
+
   const { userInfo } = useSelector((state) => state.auth);
+  
   return (
     <div className="h-screen overflow-hidden">
       <Header />
@@ -13,7 +15,7 @@ const Home = () => {
             {userInfo ? (
           <div className="px-5 max-sm:py-20 sm:px-20">
             <h1 className="font-medium text-gray-500 uppercase">Welcome to my world.</h1>
-            <h1 className="font-extrabold text-lg sm:text-5xl">Hi, I'm <span className="text-yellow-700 capitalize">{userInfo.firstName}</span></h1>
+            <h1 className="font-extrabold text-lg sm:text-5xl">Hi, I'm <span className="text-yellow-700 capitalize">{ userInfo.firstName }</span></h1>
             <h2 className="font-semibold sm:text-3xl">a Developer.{" "}<span className="text-gray-500">|</span></h2>
             <div>
             <p className="py-2">Lorem ipsum dolor sit amet consectetur, 

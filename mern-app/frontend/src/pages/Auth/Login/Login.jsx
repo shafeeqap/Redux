@@ -7,6 +7,7 @@ import { useFormik } from "formik";
 import { loginValidation } from "../../../utils/validation/yupLoginValidation.js";
 import { TfiEmail } from "react-icons/tfi";
 import { useLoginMutation } from "../../../features/user/usersApiSlice.js";
+import { useGoogleLoginMutation } from "../../../features/user/authApiSlice.js";
 import {
   openForgotPasswordModal,
   closeForgotPasswordModal,
@@ -19,6 +20,8 @@ import Modal from "../../../Components/modal/Modal.jsx";
 import ForgotPassword from "../../../Components/forgotPassword/ForgotPassword.jsx";
 import CryptoJs from "crypto-js";
 import { handleRememberMe, saveCredentials } from "../../../utils/helpers/rememberMe.js";
+import axios from 'axios';
+
 
 const initialValues = {
   email: "",
@@ -33,6 +36,8 @@ const Login = () => {
   const [login, { isLoading }] = useLoginMutation();
   const { userInfo } = useSelector((state) => state.auth);
   const { isForgotPasswordModalOpen } = useSelector((state) => state.modal);
+  const [googleLogin] = useGoogleLoginMutation();
+
 
   useEffect(() => {
     const savedEmail = localStorage.getItem("email");
@@ -52,12 +57,43 @@ const Login = () => {
     }
   }, [navigate, userInfo]);
 
+console.log(userInfo, 'userInfon');
+
+  const handleGoogleLogin = () =>{
+    window.location.href = 'http://localhost:5000/auth/google';
+  };
+
+  const getUser = async () =>{
+    try {
+      const res = await axios.get('http://localhost:5000/auth/login/success', {withCredentials: true});
+      // const { data } = await googleLogin().unwrap();
+      console.log(res, 'res');
+
+      dispatch(setCredentials({ ...res }));
+      navigate("/");
+      
+    } catch (error) {
+      console.log(error);
+      
+    }
+  };
+
+  useEffect(() => {
+    if (!userInfo) {
+      getUser();
+    }
+  }, [userInfo]);
+  
+
+
   const handleCheckboxChange = (e, setFieldValue) => {
     const isChecked = e.target.checked;
     setRememberMe(isChecked);
 
     handleRememberMe(isChecked, setFieldValue);
   };
+
+
 
   const {
     values,
@@ -94,7 +130,7 @@ const Login = () => {
     dispatch(openForgotPasswordModal());
   };
 
-  const handlForgotPsswordClose = () => {
+  const handlForgotPasswordClose = () => {
     dispatch(closeForgotPasswordModal());
   };
 
@@ -192,11 +228,11 @@ const Login = () => {
               <p className="px-3 text-gray-50">OR</p>
               <div className="border-t border-gray-300 w-1/2"></div>
             </div>
-            <div className="mt-3 border border-gray-300 rounded-md">
+            <div className="mt-3 border border-gray-300 rounded-md bg-white">
               <div className="flex justify-between items-center px-5 p-1 cursor-pointer">
                 <FcGoogle />
                 <div className="w-full">
-                  <p className="font-serif">Log in with Google</p>
+                  <button onClick={handleGoogleLogin} className="text-black">Log in with Google</button>
                 </div>
               </div>
             </div>
@@ -205,7 +241,7 @@ const Login = () => {
       </div>
       <Modal
         isOpen={isForgotPasswordModalOpen}
-        onClose={handlForgotPsswordClose}
+        onClose={handlForgotPasswordClose}
         title={"Forgot Password"}
       >
         <ForgotPassword />

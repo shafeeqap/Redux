@@ -183,11 +183,11 @@ const Signup = () => {
               <p className="px-3 text-gray-50">Or</p>
               <div className="border-t border-gray-300 w-1/2"></div>
             </div>
-            <div className="mt-3 border border-gray-300 rounded-md">
+            <div className="mt-3 border border-gray-300 rounded-md bg-white">
               <div className="flex justify-between items-center px-5 p-1 cursor-pointer">
                 <FcGoogle />
                 <div className="w-full">
-                <p className="font-serif">Log in with Google</p>
+                <p className="text-black">Sign up with Google</p>
                 </div>
               </div>
             </div>

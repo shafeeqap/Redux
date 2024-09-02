@@ -11,21 +11,29 @@ const Dropdown = () => {
   const navigate = useNavigate();
   const [ logoutApiCall ] = useLogoutMutation();
 
-  const logoutHandler = async() =>{
+  const logoutHandler = async () =>{
     try {
-      await logoutApiCall().unwrap();
-      dispatch(logout());
-      navigate("/");
+      if(userInfo.googleId){
+        await window.open('http://localhost:5000/auth/logout', "_self");
+        document.cookie = "connect.sid=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        dispatch(logout());
+        navigate("/");
+      } else {
+        await logoutApiCall().unwrap();
+        dispatch(logout());
+        navigate("/");
+      }
     } catch (error) {
       console.log(error);
     }
   }
 
+  
   return (
     <Menu as="div" className="relative inline-block text-left">
       <div>
         <MenuButton className="inline-flex w-full justify-center gap-x-1.5 rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm ring-1 ring-inset ring-gray-300 capitalize">
-          {userInfo?.firstName}
+          { userInfo?.firstName}
           <ChevronDownIcon aria-hidden="true" className="-mr-1 h-5 w-5 text-gray-400" />
         </MenuButton>
       </div>

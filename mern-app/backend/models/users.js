@@ -5,19 +5,20 @@ import bcrypt from 'bcryptjs';
 const userSchema = new mongoose.Schema({
     firstName: {
         type: String,
-        required: true,
+        required: false,
     },
     lastName: {
         type: String,
-        required: true,
+        required: false,
     },
     email: {
         type: String,
         required: true,
+        unique: true,
     },
     password: {
         type: String,
-        required: true,
+        required: false,
     },
     mobile: {
         type: String,
@@ -25,7 +26,13 @@ const userSchema = new mongoose.Schema({
     },
     profileImage: {
         type: String,
-        // required: false
+    },
+    googleId: {
+        type: String,
+        unique: true,
+    },
+    displayName: {
+        type: String,
     },
     otp: {
         type: String,

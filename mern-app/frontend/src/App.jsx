@@ -7,8 +7,12 @@ import Profile from "./pages/Profile/Profile";
 import PrivateRoute from "./Components/Private/PrivateRoute";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import PageNotFound from "./pages/PageNotFound/PageNotFound";
+
 
 const App = () => {
+  
+
   return (
     <>
       <Routes>
@@ -18,6 +22,7 @@ const App = () => {
         <Route path="" element={<PrivateRoute />}>
           <Route path="/profile" element={<Profile />} />
         </Route>
+        <Route path="*" element={<PageNotFound/>} />
       </Routes>
         <ToastContainer />
     </>

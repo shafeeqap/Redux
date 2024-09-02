@@ -111,7 +111,7 @@ const Profile = () => {
                       First Name
                     </label>
                     <div className="bg-gray-200 rounded p-1 h-8 min-w-fit">
-                      <h1>{data?.user.firstName}</h1>
+                      <h1>{data?.user.firstName || userInfo.user.firstName}</h1>
                     </div>
                   </div>
                   <div className="mt-4 px-2">
@@ -122,7 +122,7 @@ const Profile = () => {
                       Last Name
                     </label>
                     <div className="bg-gray-200 rounded p-1 h-8 min-w-fit">
-                      <h1>{data?.user.lastName}</h1>
+                      <h1>{data?.user.lastName || userInfo.user.lastName}</h1>
                     </div>
                   </div>
                   <div className="mt-4 px-2">
@@ -144,7 +144,7 @@ const Profile = () => {
                       Email
                     </label>
                     <div className="bg-gray-200 rounded p-1 h-8 min-w-fit">
-                      <h1>{data?.user.email}</h1>
+                      <h1>{data?.user.email || userInfo.user.email}</h1>
                     </div>
                   </div>
                 </div>

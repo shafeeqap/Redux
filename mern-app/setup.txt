@@ -10,6 +10,8 @@ Backend
 8. cookie-parser 
 9. async-handler 
 10. multer
+11. passport
+12. passport-google-oauth20
 
 Async Handler allows you to write asynchronous route handlers 
 without having to manually wrap them in try-catch blocks 
@@ -26,6 +28,7 @@ Frontend
 6. Formik 
 7. Yup 
 8. react-toastify
+9. @react-oauth/google
 
 
 ========================== root directory package.json ====================================
