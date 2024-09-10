@@ -1,0 +1,44 @@
+.homeDiv{
+    margin: 5rem 1rem;
+  }
+  
+  .Btn {
+    padding: 5px 10px;
+    margin: 0px 2px;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .readBtn {
+    background-color: blue;
+  }
+  
+  .editBtn {
+    background-color: green;
+  }
+  
+  .deleteBtn {
+    background-color: red;
+  }
+  
+  .search {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+  
+  .search input {
+    padding: 0 5px;
+    height: 30px;
+    width: 250px;
+    border: 1px solid;
+    border-radius: 5px;
+  }
+
+  .search h2 {
+    font-weight: bolder;
+    font: 2em sans-serif;
+  }
