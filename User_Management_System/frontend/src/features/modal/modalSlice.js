@@ -5,6 +5,7 @@ const initialState = {
   isPasswordModalOpen: false,
   isProfileImageModalOpen: false,
   isForgotPasswordModalOpen: false,
+  isAddNewUserModalOpen: false,
 };
 const modalSlice = createSlice({
   name: "modal",
@@ -34,6 +35,12 @@ const modalSlice = createSlice({
     closeForgotPasswordModal: (state, action) =>{
       state.isForgotPasswordModalOpen = false;
     },
+    openAddNewUserModal: (state, action) =>{
+      state.isAddNewUserModalOpen = true;
+    },
+    closeAddNewUserModal: (state, action) =>{
+      state.isAddNewUserModalOpen = false;
+    },
   },
 });
 
@@ -46,6 +53,8 @@ export const {
   closeProfileImageModal,
   openForgotPasswordModal,
   closeForgotPasswordModal,
+  openAddNewUserModal,
+  closeAddNewUserModal,
 } = modalSlice.actions;
 
 export default modalSlice.reducer;

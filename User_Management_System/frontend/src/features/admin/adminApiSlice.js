@@ -16,6 +16,13 @@ const adminApiSlice = apiSlice.injectEndpoints({
         method: "POST",
       }),
     }),
+    addNewUser: builder.mutation({
+      query: (data) =>({
+        url: `${ADMIN_URL}/add-user`,
+        method: "POST",
+        body: data
+      }),
+    }),
     getUsers: builder.query({
       query: () => ({
         url: `${ADMIN_URL}/users`,
@@ -43,6 +50,7 @@ const adminApiSlice = apiSlice.injectEndpoints({
 export const {
   useAdminLoginMutation,
   useAdminLogoutMutation,
+  useAddNewUserMutation,
   useGetUsersQuery,
   useDeleteUserMutation,
 } = adminApiSlice;

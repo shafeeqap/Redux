@@ -2,14 +2,13 @@ import asyncHandler from "express-async-handler";
 import User from "../models/users.js";
 import generateToken from "../utils/generateToken.js";
 
+
 // @desc     Auth Admin/set token
 // route     POST /api/admin/login
 // @access   Public
 const loginAdmin = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
-  console.log(password);
   
-
   const user = await User.findOne({ email });
 
   if (!user) {
@@ -49,10 +48,48 @@ const logoutAdmin = asyncHandler(async (req, res) => {
   res.status(200).json({ message: "Admin logged out" });
 });
 
+// @desc     Add a new user
+// route     POST /api/admin/add-user
+// @access   Public
+const addNewUser = asyncHandler(async (req, res) => {
+  const { firstName, lastName, email, password } = req.body;
+  
+  const existingUser = await User.findOne({ email });
+
+  if (existingUser) {
+    res.status(400);
+    throw new Error("User already exist");
+  }
+
+  const user = await User.create({
+    firstName,
+    lastName,
+    email,
+    password,
+    role: 'user',
+  });
+
+  if (user) {
+    // generateToken(res, user._id);
+    return res.status(201).json({
+      _id: user._id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      role: user.role,
+    });
+  } else {
+    res.status(400);
+    throw new Error("Invalid user data");
+  }
+});
+
+
 // @desc     Users Data
 // route     GET /api/admin/users
 // @access   Private
 const getUsers = asyncHandler(async (req, res) => {
+  
   const user = await User.find({});
 
   res.status(200).json({ message: "User Data", user });
@@ -102,4 +139,4 @@ const updateUser = asyncHandler(async(req, res) =>{
 
 });
 
-export { loginAdmin, logoutAdmin, getUsers, deleteUser, blockUnblockUser };
+export { loginAdmin, logoutAdmin, addNewUser, getUsers, deleteUser, blockUnblockUser };

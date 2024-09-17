@@ -65,7 +65,6 @@ const Profile = () => {
     }
   }, [userInfo]);
 
-console.log(userInfo,'userinfo');
 
   return (
     <div className="h-screen">
