@@ -17,10 +17,10 @@ const adminApiSlice = apiSlice.injectEndpoints({
       }),
     }),
     addNewUser: builder.mutation({
-      query: (data) =>({
-        url: `${ADMIN_URL}/add-user`,
+      query: (data) => ({
+        url: `${ADMIN_URL}/create-user`,
         method: "POST",
-        body: data
+        body: data,
       }),
     }),
     getUsers: builder.query({
@@ -30,19 +30,24 @@ const adminApiSlice = apiSlice.injectEndpoints({
       }),
     }),
     deleteUser: builder.mutation({
-      query: (userId) => ({
-        url: `${ADMIN_URL}/users/${userId}`,
+      query: (id) => ({
+        url: `${ADMIN_URL}/users/${id}`,
         method: "DELETE",
-        body: userId,
       }),
     }),
     blockUnblockUser: builder.mutation({
-      query: (userId) => ({
-        url: `${ADMIN_URL}/users/block-unblock${userId}`,
+      query: (id) => ({
+        url: `${ADMIN_URL}/users/block-unblock/${id}`,
         method: "PATCH",
-        body: userId,
       }),
     }),
+    adminUpdateUser: builder.mutation({
+      query: ({id, data}) =>({
+        url: `${ADMIN_URL}/users/update-user/${id}`,
+        method: "PUT",
+        body: data,
+      })
+    })
   }),
   overrideExisting: false,
 });
@@ -52,5 +57,7 @@ export const {
   useAdminLogoutMutation,
   useAddNewUserMutation,
   useGetUsersQuery,
+  useAdminUpdateUserMutation,
   useDeleteUserMutation,
+  useBlockUnblockUserMutation,
 } = adminApiSlice;

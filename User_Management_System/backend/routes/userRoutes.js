@@ -13,19 +13,19 @@ import {
   resendOtp,
   verifyOTP,
 } from "../controllers/userController.js";
-import { protect } from "../middlewares/authMiddleware.js";
+import { protectUser } from "../middlewares/userAuthMiddleware.js";
 import { upload } from "../middlewares/fileUploadMiddleware.js";
-
+import { authorizeRole } from "../middlewares/authorizeRole.js";
 
 const userRouter = express.Router();
 
 userRouter.post("/", registerUser);
 userRouter.post("/auth", authUser);
 userRouter.post("/logout", logoutUser);
-userRouter.route("/profile").get(protect, getUserProfile).put(protect, updateUserProfile);
-userRouter.put("/updatePassword", protect, updatePassword);
-userRouter.post("/profileImage", upload.single('profileImage'), protect, uploadProfileImage);
-userRouter.delete("/profileImage", protect, deleteProfileImage);
+userRouter.route("/profile").get(protectUser, getUserProfile).put(protectUser, updateUserProfile);
+userRouter.put("/updatePassword", protectUser, updatePassword);
+userRouter.post("/profileImage", upload.single('profileImage'), protectUser, uploadProfileImage);
+userRouter.delete("/profileImage", protectUser, deleteProfileImage);
 userRouter.post("/forgotPassword", forgotPassword);
 userRouter.post("/verifyOTP", verifyOTP);
 userRouter.post("/resetPassword", resetPassword);

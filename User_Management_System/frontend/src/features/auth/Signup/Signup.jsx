@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { PiEyeThin, PiEyeSlashThin } from "react-icons/pi";
 import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
-import { signupValidation } from "../../../utils/validation/yupSignupValidation.js";
+import { signupValidation } from "../../../utils/validation/userSignupValidation.js";
 import { IoLockClosedOutline } from "react-icons/io5";
 import { TfiEmail } from "react-icons/tfi";
 import { FiUser } from "react-icons/fi";
@@ -11,7 +11,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useRegisterMutation } from "../../../features/user/usersApiSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { setCredentials } from "../../../features/auth/authSlice.js";
+// import { setCredentials } from "../../../features/auth/authSlice.js";
 import Loader from "../../../Components/Loader/Loader";
 
 const initialValues = {
@@ -46,9 +46,8 @@ const Signup = () => {
             success: "Registration successful!",
             error: "Registeration failed!",
           });
-          console.log(res);
-          // update the Redux store with the new user credentials.
-          dispatch(setCredentials({ ...res }));
+          console.log(res, 'response');
+          // dispatch(setCredentials({ ...res }));
           navigate("/login");
         } catch (error) {
           toast.error(

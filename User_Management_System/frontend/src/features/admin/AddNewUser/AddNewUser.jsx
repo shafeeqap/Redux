@@ -1,14 +1,16 @@
 import { useState } from "react";
 import { PiEyeThin, PiEyeSlashThin } from "react-icons/pi";
 import { useFormik } from "formik";
-import { addNewUserValidation } from "../../utils/validation/addNewUserValidation.js";
+import { addNewUserValidation } from "../../../utils/validation/addNewUserValidation.js";
 import { IoLockClosedOutline } from "react-icons/io5";
 import { TfiEmail } from "react-icons/tfi";
 import { FiUser } from "react-icons/fi";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useAddNewUserMutation } from "../../features/admin/adminApiSlice.js";
-import Loader from "../../Components/Loader/Loader";
+import { useAddNewUserMutation } from "../adminApiSlice.js";
+import Loader from "../../../Components/Loader/Loader.jsx";
+import { setCredentials } from "../../auth/authSlice.js";
+import { useDispatch } from "react-redux";
 
 const initialValues = {
   firstName: "",
@@ -21,6 +23,7 @@ const initialValues = {
 const AddNewUser = ({ handleAddNewUserModalClose, refetchUsers  }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [addNewUser, { isLoading }] = useAddNewUserMutation();
+  const dispatch = useDispatch;
 
   const { values, handleChange, handleSubmit, handleBlur, errors, touched } =
     useFormik({
@@ -35,6 +38,7 @@ const AddNewUser = ({ handleAddNewUserModalClose, refetchUsers  }) => {
           });
 
           console.log(res, 'response');
+          // dispatch(setCredentials({ ...res }));
 
           refetchUsers();
           handleAddNewUserModalClose();

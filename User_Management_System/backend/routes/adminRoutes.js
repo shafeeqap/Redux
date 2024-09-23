@@ -1,17 +1,28 @@
 import express from "express";
-import { addNewUser, blockUnblockUser, deleteUser, getUsers, loginAdmin, logoutAdmin } from "../controllers/adminController.js";
+import { 
+    addNewUser, 
+    blockUnblockUser, 
+    deleteUser, 
+    getAdminProfile, 
+    getUsers, 
+    loginAdmin, 
+    logoutAdmin, 
+    updateAdminProfile, 
+    updateUser
+} from "../controllers/adminController.js";
 import { authorizeRole } from "../middlewares/authorizeRole.js";
-import { protect } from "../middlewares/authMiddleware.js";
+import { protectAdmin } from "../middlewares/adminAuthMiddleware.js";
 
 const adminRouter = express.Router();
 
-adminRouter.post("/login", loginAdmin);
 adminRouter.post("/logout", logoutAdmin);
-adminRouter.post("/add-user",protect, authorizeRole("admin"), addNewUser)
-adminRouter.get("/users", protect, authorizeRole("admin"), getUsers);
-adminRouter.delete("/users/:id", protect, authorizeRole('admin'), deleteUser);
-adminRouter.patch("/users/block-unblock/:id", protect, authorizeRole('admin'), blockUnblockUser);
-adminRouter.put("/users/update-user/:id", protect, authorizeRole('admin'));
+adminRouter.post("/login", loginAdmin);
+adminRouter.post("/create-user", protectAdmin, authorizeRole("admin"), addNewUser)
+adminRouter.route("/profile").get(protectAdmin, authorizeRole("admin"), getAdminProfile).put(protectAdmin, updateAdminProfile);
+adminRouter.get("/users", protectAdmin, authorizeRole("admin"), getUsers);
+adminRouter.put("/users/update-user/:id", protectAdmin, authorizeRole('admin'), updateUser);
+adminRouter.delete("/users/:id", protectAdmin, authorizeRole('admin'), deleteUser);
+adminRouter.patch("/users/block-unblock/:id", protectAdmin, authorizeRole('admin'), blockUnblockUser);
 
 
 export default adminRouter;

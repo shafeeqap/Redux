@@ -21,6 +21,12 @@ const AdminLogin = () => {
   const [adminLogin, { isLoading }] = useAdminLoginMutation();
   const { adminInfo } = useSelector((state) => state.admin);
 
+  useEffect(() => {
+    if (adminInfo) {
+      navigate("/admin");
+    }
+  }, [adminInfo, navigate]);
+
   const { values, handleChange, handleBlur, handleSubmit, errors, touched } =
     useFormik({
       initialValues: initialValues,
@@ -44,17 +50,12 @@ const AdminLogin = () => {
       },
     });
 
-  useEffect(() => {
-    if (adminInfo) {
-      navigate("/admin");
-    }
-  }, [adminInfo]);
 
   return (
     <div className="flex justify-center items-center h-screen bg-black/65">
-      <div className="flex flex-col bg-gray-400 p-4">
+      <div className="flex flex-col bg-gray-400 p-4 w-1/4">
         <div className="text-center m-5">
-          <h2 className="font-semibold uppercase">Admin Panel</h2>
+          <h2 className="font-semibold uppercase">Admin Login</h2>
         </div>
         <div className="">
           <form onSubmit={handleSubmit}>
@@ -100,7 +101,7 @@ const AdminLogin = () => {
               </div>
             </div>
             <div className="flex justify-center">{isLoading && <Loader />}</div>
-            <div className="mb-5">
+            <div className="mb-1">
               <button className="bg-blue-500 uppercase p-1 w-full text-white">
                 Login
               </button>

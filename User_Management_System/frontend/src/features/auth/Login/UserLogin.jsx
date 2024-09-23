@@ -4,7 +4,7 @@ import { IoLockClosedOutline } from "react-icons/io5";
 import { FcGoogle } from "react-icons/fc";
 import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
-import { loginValidation } from "../../../utils/validation/yupLoginValidation.js";
+import { loginValidation } from "../../../utils/validation/userLoginValidation.js";
 import { TfiEmail } from "react-icons/tfi";
 import { useLoginMutation } from "../../user/usersApiSlice.js";
 import { useGoogleLoginMutation } from "../../user/authApiSlice.js";
@@ -114,7 +114,7 @@ console.log(userInfo, 'userInfon');
 
         saveCredentials(rememberMe, values);
 
-        console.log(res);
+        console.log(res, 'response');
         dispatch(setCredentials({ ...res }));
         navigate("/");
       } catch (error) {

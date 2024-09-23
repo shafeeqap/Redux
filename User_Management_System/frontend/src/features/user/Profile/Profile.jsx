@@ -65,6 +65,10 @@ const Profile = () => {
     }
   }, [userInfo]);
 
+  console.log(userInfo, 'userInfo');
+  console.log(data, 'user data');
+  
+  
 
   return (
     <div className="h-screen">

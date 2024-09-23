@@ -3,7 +3,7 @@ import { CiLogin } from "react-icons/ci";
 import { Link, useNavigate } from "react-router-dom";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { useAdminLogoutMutation } from "../../features/admin/adminApiSlice.js";
-import { logout } from "../../features/admin/adminSlice.js";
+import { adminLogout } from "../../features/admin/adminSlice.js";
 import { useDispatch, useSelector } from "react-redux";
 import AdminDropdown from "../Dropdown/AdminDropdown.jsx";
 
@@ -18,7 +18,7 @@ const AdminHeader = () => {
   const logoutHandler = async () => {
     try {
       await adminLogoutApiCall().unwrap();
-      dispatch(logout());
+      dispatch(adminLogout());
       navigate("/admin-login");
     } catch (error) {
       console.log(error);
@@ -56,6 +56,9 @@ const AdminHeader = () => {
               </li>
               <li className="hover:bg-black/10 p-1 cursor-pointer">
                 <Link to="/adminHome">Home</Link>
+              </li>
+              <li className="hover:bg-black/10 p-1 cursor-pointer">
+                <Link to="/profile">Profile</Link>
               </li>
               <li className="hover:bg-black/10 p-1 cursor-pointer">
                 <Link to="/dashboard">Dashboard</Link>

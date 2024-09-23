@@ -15,13 +15,17 @@ const __dirname = path.dirname(__filename);
 // @access   Public
 const authUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
+
   const user = await User.findOne({ email });
+  
   if(!user){
     return res.status(400).json({ message: "User not exist!"});
   }
 
   if (user && (await user.matchPasswords(password))) {
-    generateToken(res, user._id);
+
+    generateToken(res, user._id, user.role);
+
     res.status(201).json({
       _id: user._id,
       firstName: user.firstName,
@@ -58,7 +62,7 @@ const registerUser = asyncHandler(async (req, res) => {
     role: 'user',
   });
   if (user) {
-    generateToken(res, user._id);
+    // generateToken(res, user._id, user.role);
     return res.status(201).json({
       _id: user._id,
       firstName: user.firstName,
@@ -109,10 +113,13 @@ const updateUserProfile = asyncHandler(async (req, res) => {
     user.email = req.body.email || user.email;
     user.mobile = req.body.mobile || user.mobile;
     user.profileImage = req.body.profileImage || user.profileImage;
+
     if (req.body.password) {
       user.password = req.body.password;
     }
+    
     const updatedUser = await user.save();
+
     res.status(200).json({
       _id: updatedUser._id,
       firstName: updatedUser.firstName,

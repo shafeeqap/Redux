@@ -4,110 +4,133 @@ import { useEffect, useState } from "react";
 import Loader from "../../../Components/Loader/Loader.jsx";
 import Button from "../../../Components/Button/Button.jsx";
 import "../UserList/UserList.css";
-// import { toast } from "react-toastify";
 import {
   openAddNewUserModal,
   closeAddNewUserModal,
+  openEditUserModal,
+  closeEditUserModal,
+  setSelectedUser,
+  openUserBlockUnblockModal,
+  closeUserBlockUnblockModal,
+  openUserDeleteModal,
+  closeUserDeleteModal,
 } from "../../modal/modalSlice.js";
 import { useDispatch, useSelector } from "react-redux";
 import Modal from "../../../Components/modal/Modal.jsx";
-import AddNewUser from "../AddNewUser.jsx";
-
-const columns = [
-  {
-    name: "First Name",
-    selector: (row) => row.firstName,
-  },
-  {
-    name: "Last Name",
-    selector: (row) => row.lastName,
-  },
-  {
-    name: "Mobile",
-    selector: (row) => row.mobile,
-  },
-  {
-    name: "Profile Image",
-    cell: (row) => (
-      row.profileImage ? (
-        <img
-          src={row.profileImage}
-          alt={`${row.firstName[0]} ${row.lastName[0]}`}
-          width="50"
-          height="50"
-          style={{ borderRadius: "100%" }}
-        />
-      ) : (
-        <div className="initials ">
-        {`${row.firstName[0]}${row.lastName[0]}`}
-      </div>
-      )
-    ),
-  },
-  {
-    name: "Email",
-    selector: (row) => row.email,
-  },
-  {
-    name: "Action",
-    cell: (row) => (
-      <div>
-        <Button className="editBtn Btn" onClick={() => handleEdit(row.id)}>
-          Edit
-        </Button>
-        <Button className="deleteBtn Btn" onClick={() => handleDelete(row.id)}>
-          Delete
-        </Button>
-        <Button
-          className="readBtn Btn"
-          onClick={() => handleBlockUnblockUser(row.id, row.isStatus)}
-        >
-          {row.isStatus ? "Block" : "Unblock"}
-        </Button>
-      </div>
-    ),
-  },
-];
-
-const customStyles = {
-  headCells: {
-    style: {
-      backgroundColor: "black",
-      color: "white",
-      fontSize: "17px",
-      fontWeight: "bolder",
-    },
-  },
-};
-
-const handleBlockUnblockUser = (id, isStatus) => {
-  const action = isStatus ? "Block" : "Unblock";
-  console.log(`${action} user with ID:`, id);
-};
-
-const handleEdit = (id) => {
-  console.log("Edit user with ID:", id);
-};
-const handleDelete = (id) => {
-  console.log("Delete user with ID:", id);
-};
+import AddNewUser from "../AddNewUser/AddNewUser.jsx";
+import EditUser from "../EditUser/EditUser.jsx";
+import UserBlockUnblock from "../UserBlockUnblock/UserBlockUnblock.jsx";
+import DeleteUser from "../DeleteUser/DeleteUser.jsx";
 
 const UserList = () => {
-  // Fetch user data
   const { data, isLoading, refetch, error } = useGetUsersQuery();
   const [userData, setUserData] = useState([]);
+  const [blockUser, setBlockUser] = useState();
+  const [deleteUser, setDeleteUser] = useState();
+  const {
+    isAddNewUserModalOpen,
+    isEditUserModalOpen,
+    selectedUser,
+    isUserBlockUnblockModalOpne,
+    isUserDeleteModalOpen,
+  } = useSelector((state) => state.modal);
   const dispatch = useDispatch();
-  const { isAddNewUserModalOpen } = useSelector((state) => state.modal);
 
-  console.log(data, 'data');
-  
+  console.log(data, "data");
+
   console.log(userData, "userData");
+  
+  const columns = [
+    {
+      name: "First Name",
+      selector: (row) => row.firstName,
+      width: "180px",
+    },
+    {
+      name: "Last Name",
+      selector: (row) => row.lastName,
+      width: "180px",
+    },
+    {
+      name: "Mobile",
+      selector: (row) => row.mobile,
+      width: "150px",
+    },
+    {
+      name: "Profile Image",
+      width: "150px",
+      cell: (row) =>
+        row.profileImage ? (
+          <img
+            src={`http://localhost:5000/userProfile/${row.profileImage}`}
+            alt={`${row.firstName[0]} ${row.lastName[0]}`}
+            width="50"
+            height="50"
+            style={{ borderRadius: "100%", width: "50px", height: "50px" }}
+          />
+        ) : (
+          <div className="initials ">
+            {`${row.firstName[0]}${row.lastName[0]}`}
+          </div>
+        ),
+    },
+    {
+      name: "Email",
+      selector: (row) => row.email,
+    },
+    {
+      name: "Status",
+      selector: (row) => (
+        <span className={row.isStatus ? "text-green-600" : "text-red-500"}>
+          {row.isStatus ? "Active" : "Blocked"}
+        </span>
+      ),
+      width: "150px",
+    },
+    {
+      name: "Action",
+      cell: (row) => (
+        <div>
+          <Button
+            className="editBtn Btn"
+            onClick={() => handleEditUserModalOpen(row)}
+          >
+            Edit
+          </Button>
+          <Button
+            className="deleteBtn Btn"
+            onClick={() => handleDeleteUserModalOpen(row)}
+          >
+            Delete
+          </Button>
+          <Button
+            className="readBtn Btn"
+            onClick={() => handleBlockUnblockUserModalOpne(row)}
+          >
+            {row.isStatus ? "Block" : "Unblock"}
+          </Button>
+        </div>
+      ),
+    },
+  ];
+
+  const customStyles = {
+    headCells: {
+      style: {
+        backgroundColor: "black",
+        color: "white",
+        fontSize: "17px",
+        fontWeight: "bolder",
+      },
+    },
+  };
 
   useEffect(() => {
     if (data?.user) {
-      setUserData(data.user);
+      const filteredUsers = data.user.filter((item) => item.role !== "admin");
+      setUserData(filteredUsers);
     } else {
-      setUserData([]); 
+      setUserData([]);
     }
   }, [data]);
 
@@ -130,6 +153,35 @@ const UserList = () => {
   };
   const handleAddNewUserModalClose = () => {
     dispatch(closeAddNewUserModal());
+  };
+  const handleEditUserModalOpen = (user) => {
+    dispatch(openEditUserModal());
+    dispatch(setSelectedUser(user));
+  };
+
+  const handleEditUserModalClose = () => {
+    dispatch(closeEditUserModal());
+    refetch();
+  };
+
+  const handleBlockUnblockUserModalOpne = (user) => {
+    dispatch(openUserBlockUnblockModal());
+    setBlockUser(user);
+  };
+
+  const handleBlockUnblockUserModalClose = () => {
+    dispatch(closeUserBlockUnblockModal());
+    refetch();
+  };
+
+  const handleDeleteUserModalOpen = (user) => {
+    dispatch(openUserDeleteModal());
+    setDeleteUser(user);
+  };
+
+  const handleDeleteUserModalClose = () => {
+    dispatch(closeUserDeleteModal());
+    refetch();
   };
 
   return (
@@ -164,9 +216,39 @@ const UserList = () => {
         onClose={handleAddNewUserModalClose}
         title={"Add New User"}
       >
-        <AddNewUser 
-        handleAddNewUserModalClose={handleAddNewUserModalClose}
-        refetchUsers={refetch}
+        <AddNewUser
+          handleAddNewUserModalClose={handleAddNewUserModalClose}
+          refetchUsers={refetch}
+        />
+      </Modal>
+
+      <Modal
+        isOpen={isEditUserModalOpen}
+        onClose={handleEditUserModalClose}
+        title={"Edit User"}
+      >
+        <EditUser user={selectedUser} handleEditUserModalClose={handleEditUserModalClose} />
+      </Modal>
+
+      <Modal
+        isOpen={isUserBlockUnblockModalOpne}
+        onClose={handleBlockUnblockUserModalClose}
+        title={"Are you sure to block/unblock the user?"}
+      >
+        <UserBlockUnblock
+          user={blockUser}
+          handleBlockUnblockUserModalClose={handleBlockUnblockUserModalClose}
+        />
+      </Modal>
+
+      <Modal
+        isOpen={isUserDeleteModalOpen}
+        onClose={handleDeleteUserModalClose}
+        title={"Are you sure to delete the user?"}
+      >
+        <DeleteUser
+          user={deleteUser}
+          handleDeleteUserModalClose={handleDeleteUserModalClose}
         />
       </Modal>
     </div>

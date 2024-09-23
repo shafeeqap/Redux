@@ -3,7 +3,7 @@ import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAdminLogoutMutation } from '../../features/admin/adminApiSlice';
-import { logout } from '../../features/admin/adminSlice';
+import { adminLogout } from '../../features/admin/adminSlice';
 
 const AdminDropdown = () => {
   const { adminInfo } = useSelector((state) => state.admin);
@@ -15,11 +15,11 @@ const AdminDropdown = () => {
     try {
       if(adminInfo.googleId){
         window.open('http://localhost:5000/auth/logout', "_self");
-        dispatch(logout());
+        dispatch(adminLogout());
         navigate("/admin-login");
       } else {
         await adminLogoutApiCall().unwrap();
-        dispatch(logout());
+        dispatch(adminLogout());
         navigate("/admin-login");
       }
     } catch (error) {
@@ -47,6 +47,13 @@ const AdminDropdown = () => {
               className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
             >
               Home
+            </Link>
+          </MenuItem>
+          <MenuItem>
+            <Link to="#"
+              className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
+            >
+              Profile
             </Link>
           </MenuItem>
           <MenuItem>

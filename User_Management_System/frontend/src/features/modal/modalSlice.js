@@ -6,6 +6,10 @@ const initialState = {
   isProfileImageModalOpen: false,
   isForgotPasswordModalOpen: false,
   isAddNewUserModalOpen: false,
+  isEditUserModalOpen: false,
+  selectedUser: null,
+  isUserBlockUnblockModalOpne: false,
+  isUserDeleteModalOpen: false,
 };
 const modalSlice = createSlice({
   name: "modal",
@@ -41,6 +45,28 @@ const modalSlice = createSlice({
     closeAddNewUserModal: (state, action) =>{
       state.isAddNewUserModalOpen = false;
     },
+    openEditUserModal: (state, action) =>{
+      state.isEditUserModalOpen = true;
+    },
+    closeEditUserModal: (state, aciton) =>{
+      state.isEditUserModalOpen = false;
+      state.selectedUser = null
+    },
+    setSelectedUser: (state, action) => {
+      state.selectedUser = action.payload;
+    },
+    openUserBlockUnblockModal: (state, action) =>{
+      state.isUserBlockUnblockModalOpne = true;
+    },
+    closeUserBlockUnblockModal: (state, action) =>{
+      state.isUserBlockUnblockModalOpne = false;
+    },
+    openUserDeleteModal: (state, action) =>{
+      state.isUserDeleteModalOpen = true;
+    },
+    closeUserDeleteModal: (state, action) => {
+      state.isUserDeleteModalOpen = false;
+    }
   },
 });
 
@@ -55,6 +81,13 @@ export const {
   closeForgotPasswordModal,
   openAddNewUserModal,
   closeAddNewUserModal,
+  openEditUserModal,
+  closeEditUserModal,
+  setSelectedUser,
+  openUserBlockUnblockModal,
+  closeUserBlockUnblockModal,
+  openUserDeleteModal,
+  closeUserDeleteModal,
 } = modalSlice.actions;
 
 export default modalSlice.reducer;

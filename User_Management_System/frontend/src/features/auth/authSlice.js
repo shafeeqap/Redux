@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import authApiSlice from "../user/authApiSlice";
 
 const initialState = {
   userInfo: localStorage.getItem("userInfo")
@@ -18,7 +17,6 @@ const authSlice = createSlice({
     logout: (state, action) => {
       state.userInfo = null;
       localStorage.removeItem("userInfo");
-      authApiSlice.util.resetApiState();
     },
   },
 });

@@ -1,46 +1,16 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import { updateProfileValidation } from "../../../utils/validation/updateProfileValidation.js";
 import { TfiEmail } from "react-icons/tfi";
-import { FiUser } from "react-icons/fi";
-import { FiSmartphone } from "react-icons/fi";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { useUpdateUserMutation } from "../../../features/user/usersApiSlice.js";
-import { useDispatch, useSelector } from "react-redux";
-import { setCredentials } from "../../../features/auth/authSlice.js";
-import Loader from "../../Loader/Loader.jsx";
+import { FiSmartphone, FiUser } from "react-icons/fi";
+import { toast } from "react-toastify";
+import { useAdminUpdateUserMutation } from "../adminApiSlice.js"
+import Loader from "../../../Components/Loader/Loader.jsx";
 
-const UpdateProfile = ( {handleProfileModalClose} ) => {
-  const [updateProfile, { isLoading }] = useUpdateUserMutation();
-  const { userInfo } = useSelector((state) => state.auth);
+
+const EditUser = ({ user, handleEditUserModalClose }) => {
+  const [adminUpdateUser, { isLoading }] = useAdminUpdateUserMutation();
   const [isModified, setIsModified] = useState(false);
-  const dispatch = useDispatch();
-  const [initialValues, setInitialValues] = useState({
-    firstName: userInfo.firstName,
-    lastName: userInfo.lastName,
-    email: userInfo.email,
-    mobile: userInfo.mobile,
-  });
-
-  useEffect(() => {
-    setInitialValues({
-      firstName: userInfo.firstName,
-      lastName: userInfo.lastName,
-      email: userInfo.email,
-      mobile: userInfo.mobile,
-    });
-  }, [userInfo]);
-
-
-  const hasChanges = (values) => {
-    return (
-      values.firstName !== initialValues.firstName ||
-      values.lastName !== initialValues.lastName ||
-      values.email !== initialValues.email ||
-      values.mobile !== initialValues.mobile
-    );
-  }
 
   const {
     values,
@@ -49,39 +19,63 @@ const UpdateProfile = ( {handleProfileModalClose} ) => {
     handleSubmit,
     errors,
     touched,
+    setValues,
   } = useFormik({
     initialValues: {
-      firstName: userInfo.firstName,
-      lastName: userInfo.lastName,
-      email: userInfo.email,
-      mobile: userInfo.mobile,
+      firstName: user.firstName || "",
+      lastName: user.lastName || "",
+      email: user.email || "",
+      mobile: user.mobile || "",
     },
     validationSchema: updateProfileValidation,
     enableReinitialize: true,
     onSubmit: async (formValues) => {
-      
-      try {
-        const res = await toast.promise(updateProfile(formValues).unwrap(), {
+
+      try {    
+        const updateUserPromise  = adminUpdateUser({id: user._id, data: formValues}).unwrap();
+
+        toast.promise(updateUserPromise, {
           pending: "Updating...",
           success: "Updation successful!",
           error: "Updation failed!",
         });
-        console.log(res);
-        dispatch(setCredentials({ ...res }));
-        handleProfileModalClose();
+
+        const res = await updateUserPromise;
+
+        if(res){
+          handleEditUserModalClose();
+        }
       } catch (error) {
-        console.log(error);
-        toast.error(
-          error?.data?.message || "An error occurred during register."
-        );
+        console.log(error.response ? error.response.data : error);
+        toast.error(error?.response?.data?.message || "An error occurred");
       }
     },
   });
 
   useEffect(() => {
-    setIsModified(hasChanges(values));
+    setValues({
+      firstName: user.firstName || "",
+      lastName: user.lastName || "",
+      email: user.email || "",
+      mobile: user.mobile || "",
+    });
+  }, [user, setValues]);
+
+  useEffect(() => {
+    setIsModified(hasChanges(values)); 
   }, [values]);
 
+  const hasChanges = (values) => {
+    return (
+      values.firstName !== user.firstName ||
+      values.lastName !== user.lastName ||
+      values.email !== user.email ||
+      values.mobile !== user.mobile
+    );
+  }
+
+  
+  
   return (
     <div>
       <form onSubmit={handleSubmit}>
@@ -153,18 +147,17 @@ const UpdateProfile = ( {handleProfileModalClose} ) => {
           <div className="flex justify-center">{isLoading && <Loader /> }</div>
           <button
             type="submit"
-            disabled={isLoading || !isModified} 
+            disabled={ isLoading || !isModified}
             className={`bg-blue-500 text-white uppercase p-2 text-sm max-w-sm rounded-md sm:text-base sm:p-3 md:p-2 lg:w-full hover:bg-blue-600 hover:text-gray-200 cursor-pointer ${
               (!isModified || isLoading) && "cursor-not-allowed opacity-50"
-            }`}
-          >
+            }`}          >
             update
           </button>
         </div>
       </form>
-      <ToastContainer />
     </div>
   );
-};
 
-export default UpdateProfile;
+}
+
+export default EditUser

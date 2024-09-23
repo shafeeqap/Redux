@@ -8,19 +8,20 @@ import PrivateRoute from "./Components/Private/PrivateRoute";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import PageNotFound from "./pages/PageNotFound/PageNotFound";
-// import AdminRoutes from "./routes/AdminRoutes";
 import AdminLogin from "./features/auth/Login/AdminLogin";
 import AdminHome from "./pages/Home/AdminHome";
 import Dashboard from "./features/admin/Dashboard";
 import AdminPrivateRoute from "./Components/Private/AdminPrivateRoute";
+import TokenExpirationHandler from "./Components/TokenExpirationHandler/TokenExpirationHandler ";
 
 const App = () => {
   return (
     <>
+    {/* <TokenExpirationHandler /> */}
       <Routes>
         <Route path="/" element={<UserHome />} />
-        <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/login" element={<Login />} />
         <Route path="" element={<PrivateRoute />}>
           <Route path="/profile" element={<Profile />} />
         </Route>
@@ -32,7 +33,6 @@ const App = () => {
         </Route>
         <Route path="*" element={<PageNotFound />} />
       </Routes>
-      {/* <AdminRoutes /> */}
       <ToastContainer />
     </>
   );
