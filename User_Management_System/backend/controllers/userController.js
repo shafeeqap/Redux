@@ -22,6 +22,10 @@ const authUser = asyncHandler(async (req, res) => {
     return res.status(400).json({ message: "User not exist!"});
   }
 
+  if(user.isStatus === false){
+    return res.status(400).json({ message: "User is blocked"});
+  }  
+
   if (user && (await user.matchPasswords(password))) {
 
     generateToken(res, user._id, user.role);
@@ -324,6 +328,20 @@ const resetPassword = asyncHandler(async (req, res) => {
   res.status(200).json({ message: "Password reset successful" });
 });
 
+// @desc     User status
+// route     GET /api/users/status
+// @access   Public
+const getUserStatus = asyncHandler(async(req, res) =>{
+  
+  const user = await User.findById(req.user.id);
+  
+  if(!user) {
+    return res.status(404).json({ message: "User not found"});
+  }
+
+  return res.status(200).json({ status: user.isStatus });
+})
+
 export {
   authUser,
   registerUser,
@@ -337,4 +355,5 @@ export {
   verifyOTP,
   resendOtp,
   resetPassword,
+  getUserStatus,
 };

@@ -55,7 +55,7 @@ const AdminHeader = () => {
                 <Link to="/admin-login">Login</Link>
               </li>
               <li className="hover:bg-black/10 p-1 cursor-pointer">
-                <Link to="/adminHome">Home</Link>
+                <Link to="/admin">Home</Link>
               </li>
               <li className="hover:bg-black/10 p-1 cursor-pointer">
                 <Link to="/profile">Profile</Link>

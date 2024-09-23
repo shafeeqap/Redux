@@ -7,7 +7,6 @@ import { useEffect, useState } from "react";
 const AdminHome = () => {
   const [profileImage, setProfileImage] = useState();
   const { adminInfo } = useSelector((state) => state.admin);
-  console.log(adminInfo, "adminInfo");
 
   useEffect(() => {
     if (adminInfo.profileImage) {

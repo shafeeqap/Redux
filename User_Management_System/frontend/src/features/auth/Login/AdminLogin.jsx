@@ -7,7 +7,7 @@ import Loader from "../../../Components/Loader/Loader";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useAdminLoginMutation } from "../../admin/adminApiSlice";
-import { setCredentials } from "../../../features/admin/adminSlice";
+import { setAdminCredentials } from "../../../features/admin/adminSlice";
 
 const initialValues = {
   email: "",
@@ -38,8 +38,7 @@ const AdminLogin = () => {
             success: "Logged in successfully!",
             error: "Login failed!",
           });
-          console.log(res, "admin response");
-          dispatch(setCredentials({ ...res }));
+          dispatch(setAdminCredentials({ ...res }));
           navigate("/admin");
         } catch (error) {
           console.log(error?.data?.message || error.error);

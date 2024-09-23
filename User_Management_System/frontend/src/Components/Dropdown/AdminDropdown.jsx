@@ -43,7 +43,7 @@ const AdminDropdown = () => {
       >
         <div className="py-1">
         <MenuItem>
-            <Link to="/admin"
+            <Link to="/admin-home"
               className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
             >
               Home
@@ -57,7 +57,7 @@ const AdminDropdown = () => {
             </Link>
           </MenuItem>
           <MenuItem>
-            <Link to="/dashboard"
+            <Link to="/admin/dashboard"
               className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
             >
               Dashboard

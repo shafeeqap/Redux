@@ -14,13 +14,13 @@ import {
 } from "../../modal/modalSlice.js";
 import { useDispatch, useSelector } from "react-redux";
 import { setCredentials } from "../authSlice.js";
-import { toast } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import Loader from "../../../Components/Loader/Loader.jsx";
 import Modal from "../../../Components/modal/Modal.jsx";
 import ForgotPassword from "../../../Components/forgotPassword/ForgotPassword.jsx";
 import CryptoJs from "crypto-js";
 import { handleRememberMe, saveCredentials } from "../../../utils/helpers/rememberMe.js";
-
 
 const initialValues = {
   email: "",
@@ -71,6 +71,9 @@ console.log(userInfo, 'userInfon');
     try {
       const res = await googleLogin().unwrap();
       console.log(res, 'res');
+      toast.success(res.message);
+
+      window.alert(res.message)
 
       dispatch(setCredentials({ ...res }));
       navigate("/");
@@ -111,14 +114,11 @@ console.log(userInfo, 'userInfon');
           success: "Logged in successfully!",
           error: "Login failed!",
         });
-
         saveCredentials(rememberMe, values);
-
-        console.log(res, 'response');
         dispatch(setCredentials({ ...res }));
         navigate("/");
       } catch (error) {
-        console.log(error?.data?.message || error.error);
+        console.log(error?.data?.message || error.error ,'error');
         toast.error(error?.data?.message || "An error occurred during login.");
       }
     },
@@ -244,6 +244,7 @@ console.log(userInfo, 'userInfon');
       >
         <ForgotPassword />
       </Modal>
+      <ToastContainer />
     </div>
   );
 };

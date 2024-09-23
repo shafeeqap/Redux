@@ -1,3 +1,4 @@
+import { retry } from "@reduxjs/toolkit/query";
 import { apiSlice } from "../../services/apiSlice";
 const USERS_URL = "api/users";
 
@@ -86,6 +87,14 @@ export const userApiSlice = apiSlice.injectEndpoints({
         body: email,
       })
     }),
+    getUserStatus: builder.query({
+      query: () => ({
+        url: `${USERS_URL}/status`,
+      }),
+      transformResponse: (response) =>{
+        return response;
+      }
+    })
   }),
 });
 
@@ -102,4 +111,5 @@ export const {
   useResetPasswordMutation,
   useVerifyOTPMutation,
   useResendOtpMutation,
+  useGetUserStatusQuery,
 } = userApiSlice;

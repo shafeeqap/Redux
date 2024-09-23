@@ -12,6 +12,7 @@ import {
   resetPassword,
   resendOtp,
   verifyOTP,
+  getUserStatus,
 } from "../controllers/userController.js";
 import { protectUser } from "../middlewares/userAuthMiddleware.js";
 import { upload } from "../middlewares/fileUploadMiddleware.js";
@@ -30,5 +31,6 @@ userRouter.post("/forgotPassword", forgotPassword);
 userRouter.post("/verifyOTP", verifyOTP);
 userRouter.post("/resetPassword", resetPassword);
 userRouter.post("/resendOtp", resendOtp);
+userRouter.get("/status", protectUser, getUserStatus);
 
 export default userRouter;
