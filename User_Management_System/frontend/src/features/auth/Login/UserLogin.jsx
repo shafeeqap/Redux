@@ -60,9 +60,6 @@ const Login = () => {
   }, [userInfo]);
   
 
-
-console.log(userInfo, 'userInfon');
-
   const handleGoogleLogin = () =>{
     window.location.href = 'http://localhost:5000/auth/google';
   };
@@ -72,8 +69,6 @@ console.log(userInfo, 'userInfon');
       const res = await googleLogin().unwrap();
       console.log(res, 'res');
       toast.success(res.message);
-
-      window.alert(res.message)
 
       dispatch(setCredentials({ ...res }));
       navigate("/");

@@ -10,25 +10,25 @@ passport.use(
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       callbackURL: `${process.env.BACKEND_URL}/auth/google/callback`,
-      // passReqToCallback: true,
-      // scope: ['profile', 'email'] 
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
         let user = await User.findOne({ googleId: profile.id });
-      
-        if (!user) {
+
+        if(user){
+          return done(null, user);
+        } else {
           user = new User({
             googleId: profile.id,
             firstName: profile.name.givenName,
             lastName: profile.name.familyName,
-            email: profile.emails[0].value,
-            profileImage: profile.photos[0].value,
+            email: profile.emails[0].value || '',
+            profileImage: profile.photos[0]?.value || '',
             displayName: profile.displayName,
           });
           await user.save();
+          done(null, user);
         }
-        done(null, user);
       } catch (error) {
         done(error, false); 
       }

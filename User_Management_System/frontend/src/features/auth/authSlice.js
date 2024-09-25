@@ -4,6 +4,7 @@ const initialState = {
   userInfo: localStorage.getItem("userInfo")
     ? JSON.parse(localStorage.getItem("userInfo"))
     : null,
+    isBlocked: false,
 };
 
 const authSlice = createSlice({
@@ -18,8 +19,11 @@ const authSlice = createSlice({
       state.userInfo = null;
       localStorage.removeItem("userInfo");
     },
+    userBlocked: (state, action) => {
+      state.isBlocked = true;
+    },
   },
 });
 
-export const { setCredentials, logout } = authSlice.actions;
+export const { setCredentials, logout, userBlocked } = authSlice.actions;
 export default authSlice.reducer;

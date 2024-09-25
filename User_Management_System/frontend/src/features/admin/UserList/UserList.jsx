@@ -38,18 +38,17 @@ const UserList = () => {
 
   console.log(data, "data");
 
-  console.log(userData, "userData");
   
   const columns = [
     {
       name: "First Name",
       selector: (row) => row.firstName,
-      width: "180px",
+      width: "150px",
     },
     {
       name: "Last Name",
       selector: (row) => row.lastName,
-      width: "180px",
+      width: "150px",
     },
     {
       name: "Mobile",
@@ -59,8 +58,17 @@ const UserList = () => {
     {
       name: "Profile Image",
       width: "150px",
+      
       cell: (row) =>
-        row.profileImage ? (
+        row.googleId && row.profileImage ? (
+          <img
+          src={row.profileImage}
+          alt={`${row.firstName[0]} ${row.lastName[0]}`}
+          width="50"
+          height="50"
+          style={{ borderRadius: "100%", width: "50px", height: "50px" }}
+        />
+      ) : row.profileImage ? (
           <img
             src={`http://localhost:5000/userProfile/${row.profileImage}`}
             alt={`${row.firstName[0]} ${row.lastName[0]}`}
@@ -79,13 +87,18 @@ const UserList = () => {
       selector: (row) => row.email,
     },
     {
+      name: "Login Method",
+      selector: (row) => (row.googleId ? "Google" : "Regular"),
+      width: "150px"
+    },
+    {
       name: "Status",
       selector: (row) => (
         <span className={row.isStatus ? "text-green-600" : "text-red-500"}>
           {row.isStatus ? "Active" : "Blocked"}
         </span>
       ),
-      width: "150px",
+      width: "100px",
     },
     {
       name: "Action",

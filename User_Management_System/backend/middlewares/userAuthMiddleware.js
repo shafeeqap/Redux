@@ -12,8 +12,16 @@ const protectUser = asyncHandler(async (req, res, next) => {
 
         req.user = await User.findById(decodded.userId).select("-password");
 
+        if (!req.user) {
+          return res.status(404).json({ message: 'User not found' });
+        }
+
         if(req.user.role !== 'user'){
           return res.status(403).json({ message: 'Access denied; not a user'});
+        }
+
+        if(req.user.isStatus === false){
+          return res.status(403).json({ message: 'User is blocked' });
         }
 
         next();
