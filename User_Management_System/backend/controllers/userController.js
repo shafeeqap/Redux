@@ -328,19 +328,6 @@ const resetPassword = asyncHandler(async (req, res) => {
   res.status(200).json({ message: "Password reset successful" });
 });
 
-// @desc     User status
-// route     GET /api/users/status
-// @access   Public
-const getUserStatus = asyncHandler(async(req, res) =>{
-  
-  const user = await User.findById(req.user.id);
-  
-  if(!user) {
-    return res.status(404).json({ message: "User not found"});
-  }
-
-  return res.status(200).json({ status: user.isStatus });
-})
 
 export {
   authUser,
@@ -355,5 +342,4 @@ export {
   verifyOTP,
   resendOtp,
   resetPassword,
-  getUserStatus,
 };

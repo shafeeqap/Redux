@@ -37,7 +37,8 @@ const AdminLogin = () => {
             pending: "Logging in...",
             success: "Logged in successfully!",
             error: "Login failed!",
-          });
+          }); console.log(res, 'response');
+          
           dispatch(setAdminCredentials({ ...res }));
           navigate("/admin");
         } catch (error) {

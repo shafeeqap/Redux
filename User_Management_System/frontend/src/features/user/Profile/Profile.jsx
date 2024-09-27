@@ -22,8 +22,7 @@ import { MdOutlineLockReset } from "react-icons/md";
 
 const Profile = () => {
   const { userInfo } = useSelector((state) => state.auth);
-  const { isProfileModalOpen, isPasswordModalOpen, isProfileImageModalOpen } =
-    useSelector((state) => state.modal);
+  const { isProfileModalOpen, isPasswordModalOpen, isProfileImageModalOpen } = useSelector((state) => state.modal);
   const [profileImage, setProfileImage] = useState(default_image);
   const dispatch = useDispatch();
 
@@ -65,10 +64,6 @@ const Profile = () => {
     }
   }, [userInfo]);
 
-  console.log(userInfo, 'userInfo');
-  console.log(data, 'user data');
-  
-  
 
   return (
     <div className="h-screen">
