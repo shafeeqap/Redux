@@ -1,5 +1,5 @@
-import Header from "../../Components/Header/Header";
-import bg_image from "../../assets/bg-image.jpg";
+import Header from "../../../Components/Header/Header";
+import bg_image from "../../../assets/bg-image.jpg";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 

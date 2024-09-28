@@ -10,6 +10,7 @@ const initialState = {
   selectedUser: null,
   isUserBlockUnblockModalOpne: false,
   isUserDeleteModalOpen: false,
+  isAdminProfileModalOpen: false,
 };
 const modalSlice = createSlice({
   name: "modal",
@@ -66,7 +67,13 @@ const modalSlice = createSlice({
     },
     closeUserDeleteModal: (state, action) => {
       state.isUserDeleteModalOpen = false;
-    }
+    },
+    openAdminProfileModal: (state, action) => {
+      state.isAdminProfileModalOpen = true;
+    },
+    closeAdminProfileModal: (state, action) => {
+      state.isAdminProfileModalOpen = false;
+    },
   },
 });
 
@@ -88,6 +95,8 @@ export const {
   closeUserBlockUnblockModal,
   openUserDeleteModal,
   closeUserDeleteModal,
+  openAdminProfileModal,
+  closeAdminProfileModal,
 } = modalSlice.actions;
 
 export default modalSlice.reducer;

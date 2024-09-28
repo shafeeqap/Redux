@@ -1,6 +1,11 @@
 import asyncHandler from "express-async-handler";
 import User from "../models/users.js";
 import generateToken from "../utils/generateToken.js";
+import path from "path";
+import fs from "fs";
+import { fileURLToPath } from "url";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 
 // @desc     Auth Admin/set token
@@ -159,9 +164,78 @@ const blockUnblockUser = asyncHandler(async (req, res) => {
 });
 
 
-
+// @desc     Get admin profile image
+// route     GET /api/admin/profile
+// @access   Private
 const getAdminProfile = asyncHandler(async(req, res) => {});
-const updateAdminProfile = asyncHandler(async(req, res) => {});
+
+// @desc     Upload admin profile image
+// route     POST /api/admin/profile
+// @access   Private
+const uploadAdminProfileImage = asyncHandler(async(req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ message: "No file uploaded" });
+  }
+
+  if (!req.user) {
+    return res.status(401).json({ message: "Admin not authenticated" });
+  }
+  const user = await User.findById(req.user._id);
+
+  if (!user) {
+    return res.status(404).json({ message: "Admin not found" });
+  }
+
+  user.profileImage = `${req.file.filename}`;
+  const updatedUser = await user.save();
+
+  res.status(200).json({
+    _id: updatedUser._id,
+    firstName: updatedUser.firstName,
+    lastName: updatedUser.lastName,
+    email: updatedUser.email,
+    mobile: updatedUser.mobile,
+    profileImage: updatedUser.profileImage,
+    role: updatedUser.role,
+    message: "Admin profile image added successfully",
+  });
+  
+  
+});
+
+// @desc     Delete admin profile image
+// route     DELETE /api/admin/profile
+// @access   Private
+const deleteAdminProfileImage = asyncHandler(async(req, res) => {
+  const userId = req.user._id;
+  const user = await User.findById(userId);
+
+  if (!user) {
+    res.status(404).json({ message: "User not found" });
+  }
+
+  const imagePath = path.join(__dirname, "../public/userProfile", user.profileImage);
+
+  // Remove the image file from the server
+  if (fs.existsSync(imagePath)) {
+    fs.unlinkSync(imagePath);
+  }
+
+  user.profileImage = "";
+  const updatedUser = await user.save();
+
+  res.status(200).json({
+    _id: updatedUser._id,
+    firstName: updatedUser.firstName,
+    lastName: updatedUser.lastName,
+    email: updatedUser.email,
+    mobile: updatedUser.mobile,
+    profileImage: updatedUser.profileImage,
+    role: updatedUser.role,
+    message: "Profile image deleted successfully",
+  });
+  
+});
 
 
 
@@ -169,7 +243,8 @@ export {
   loginAdmin, 
   logoutAdmin, 
   getAdminProfile, 
-  updateAdminProfile, 
+  uploadAdminProfileImage, 
+  deleteAdminProfileImage,
   addNewUser, 
   getUsers, 
   updateUser, 

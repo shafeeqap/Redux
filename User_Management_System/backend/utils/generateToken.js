@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 
 const generateToken = (res, userId, role) =>{
     const token = jwt.sign({ userId, role }, process.env.JWT_SECRET, {
-        expiresIn: '5m',
+        expiresIn: '1h',
     });
 
     // Use different cookie names for user and admin
@@ -12,8 +12,7 @@ const generateToken = (res, userId, role) =>{
         httpOnly: true,
         secure: process.env.NODE_ENV !== 'development',
         sameSite: 'strict',
-        maxAge: 5 * 60 * 1000, // 5 minutes  
-        // 30 * 24 * 60 * 60 * 1000, // 30 days _ 1 * 60 * 60 * 1000, // 1 hour  
+        maxAge: 1 * 60 * 60 * 1000, // 1 hour // 30 * 24 * 60 * 60 * 1000, // 30 days  
     });
 };
 

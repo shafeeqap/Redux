@@ -1,27 +1,27 @@
 import { useState, useEffect } from "react";
-import { useUploadProfileImageMutation, useDeleteProfileImageMutation } from "../../../features/user/usersApiSlice";
+import { useUploadAdminProfileImageMutation, useDeleteAdminProfileImageMutation } from "../adminApiSlice";
 import { IoSave } from "react-icons/io5";
 import { FaTrashCan } from "react-icons/fa6";
 import { useDispatch, useSelector } from "react-redux";
-import { setCredentials } from "../../../features/auth/authSlice";
-import default_image from "../../../assets/profile-icon.png";
+import { setAdminCredentials } from "../adminSlice";
+import { toast } from "react-toastify";
 
 
-const ProfileImage = ({ handleProfileImageModalClose }) => {
+
+const AdminProfile = ({ handleAdminProfileModalClose }) => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewImage, setPreviewImage] = useState("");
-  const [uploadProfileImage] = useUploadProfileImageMutation();
-  const [deleteProfileImage] = useDeleteProfileImageMutation();
-  const { userInfo } = useSelector((state) => state.auth);
+  const [uploadAdminProfileImage] = useUploadAdminProfileImageMutation();
+  const [deleteAdminProfileImage] = useDeleteAdminProfileImageMutation();
+  const { adminInfo } = useSelector((state) => state.admin);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (userInfo && userInfo.profileImage) {
-      setPreviewImage(`http://localhost:5000/userProfile/${userInfo.profileImage}`);
-    } else{
-      setPreviewImage(default_image);
-    }
-  }, [userInfo]);
+    if (adminInfo && adminInfo.profileImage) {
+      setPreviewImage(`http://localhost:5000/userProfile/${adminInfo.profileImage}`);
+    } 
+
+  }, [adminInfo]);
 
   const handleClick = () => {
     document.getElementById("fileInput").click();
@@ -45,16 +45,17 @@ const ProfileImage = ({ handleProfileImageModalClose }) => {
     formData.append("profileImage", selectedFile);
 
     try {
-      const response = await uploadProfileImage(formData).unwrap();
+      const response = await uploadAdminProfileImage(formData).unwrap();
 
       const { profileImage } = response;
 
       // Update localStorage with the new profile image
-      const updatedUserInfo = { ...userInfo, profileImage };
-      localStorage.setItem("userInfo", JSON.stringify(updatedUserInfo));
+      const updatedAdminInfo = { ...adminInfo, profileImage };
+      localStorage.setItem("adminInfo", JSON.stringify(updatedAdminInfo));
+      toast.success(response.message);
 
-      dispatch(setCredentials(response));
-      handleProfileImageModalClose();
+      dispatch(setAdminCredentials(response));
+      handleAdminProfileModalClose();
     } catch (error) {
       console.log("Error uploading image:", error);
     }
@@ -64,16 +65,15 @@ const ProfileImage = ({ handleProfileImageModalClose }) => {
 
   const removeImage = async () => {
     try {
-      window.confirm('Are you sure?')
-      await deleteProfileImage().unwrap();
+        window.confirm('Are you sure?')
+      const res = await deleteAdminProfileImage().unwrap();
 
-      const updatedUserInfo = { ...userInfo, profileImage:"" };
+      const updatedAdminInfo = { ...adminInfo, profileImage:"" };
       
-      localStorage.setItem("userInfo", JSON.stringify(updatedUserInfo));
-      
-      dispatch(setCredentials(updatedUserInfo));
-      setPreviewImage(default_image);
-      // handleProfileImageModalClose();
+      localStorage.setItem("adminInfo", JSON.stringify(updatedAdminInfo));
+      toast.success(res.message);
+      dispatch(setAdminCredentials(updatedAdminInfo));
+      handleAdminProfileModalClose();
     } catch (error) {
       console.log(error);
     }
@@ -82,19 +82,24 @@ const ProfileImage = ({ handleProfileImageModalClose }) => {
 
   return (
     <div className="flex flex-col justify-center items-center">
-      <div className="text-center bg-black/25 rounded-full cursor-pointer">
+      <div onClick={handleClick} className="text-center rounded-full cursor-pointer mb-5">
         <input
           type="file"
           id="fileInput"
           onChange={handleImageChange}
           className="hidden"
         />
-        <img
-          onClick={handleClick}
-          src={previewImage}
-          alt="profile-image"
-          className="w-36 h-36 rounded-full"
-        />
+        {previewImage ? (
+            <img
+              src={previewImage}
+              alt="profile-image"
+              className="w-36 h-36 rounded-full"
+            />
+        ) : (
+            <div className="adminInitials">
+            {`${adminInfo.firstName[0]}${adminInfo.lastName[0]}`}
+          </div>
+        )}
       </div>
       <div className="w-full flex justify-between items-center">
         <button
@@ -116,4 +121,4 @@ const ProfileImage = ({ handleProfileImageModalClose }) => {
   );
 };
 
-export default ProfileImage;
+export default AdminProfile

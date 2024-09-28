@@ -163,7 +163,7 @@ const updatePassword = asyncHandler(async (req, res) => {
   });
 });
 
-// @desc     Add profile image
+// @desc     Upload profile image
 // route     POST /api/users/profileImage
 // @access   Private
 const uploadProfileImage = asyncHandler(async (req, res) => {

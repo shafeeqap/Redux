@@ -47,7 +47,20 @@ const adminApiSlice = apiSlice.injectEndpoints({
         method: "PUT",
         body: data,
       })
-    })
+    }),
+    uploadAdminProfileImage: builder.mutation({
+      query: (data) => ({
+        url: `${ADMIN_URL}/profile`,
+        method: "POST",
+        body: data,
+      }),
+    }),
+    deleteAdminProfileImage: builder.mutation({
+      query: () => ({
+        url: `${ADMIN_URL}/profile`,
+        method: "DELETE",
+      }),
+    }),
   }),
   overrideExisting: false,
 });
@@ -60,4 +73,6 @@ export const {
   useAdminUpdateUserMutation,
   useDeleteUserMutation,
   useBlockUnblockUserMutation,
+  useUploadAdminProfileImageMutation,
+  useDeleteAdminProfileImageMutation,
 } = adminApiSlice;
