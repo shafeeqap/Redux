@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useUploadFileMutation, useGetFileQuery } from "../services/apiSlice";
 import { RiImageAddFill } from "react-icons/ri";
 
